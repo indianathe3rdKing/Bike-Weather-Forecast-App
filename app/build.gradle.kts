@@ -2,8 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
-
+val apiKey:String =
+    project.findProject("API_KEY") as String? ?:""
 android {
+    defaultConfig{
+        buildConfigField("String","API_KEY", "\"$apiKey\"")
+    }
     namespace = "com.example.bikeweatherforecastapp"
     compileSdk {
         version = release(36) {
@@ -12,6 +16,7 @@ android {
     }
 
     defaultConfig {
+
         applicationId = "com.example.bikeweatherforecastapp"
         minSdk = 33
         targetSdk = 36
