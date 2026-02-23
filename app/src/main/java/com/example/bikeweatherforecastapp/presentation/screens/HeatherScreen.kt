@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingScore
-import com.example.bikeweatherforecastapp.domain.model.DailyForestcast
+import com.example.bikeweatherforecastapp.domain.model.DailyForecast
 import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import com.example.bikeweatherforecastapp.presentation.utils.Utils
@@ -27,7 +27,7 @@ import com.example.bikeweatherforecastapp.presentation.utils.Utils
 @Composable
 fun HeaderSection(
     weatherData: WeatherResponse,
-    bestForecast: DailyForestcast?,
+    bestForecast: DailyForecast?,
     bestScore: BikeRidingScore?,
     viewModel: WeatherViewModel
 ){
@@ -67,7 +67,7 @@ fun HeaderSection(
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        text= Utils().formatDate(bestForecast.date),
+                        text= Utils.formatDate(bestForecast.date),
                         color=Color.White,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold

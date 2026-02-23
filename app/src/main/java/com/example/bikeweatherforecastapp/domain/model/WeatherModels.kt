@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class WeatherResponse(
     val city: City,
     val list: List<WeatherItem>,
-    val daily: List<DailyForestcast> = emptyList()
+    val daily: List<DailyForecast> = emptyList()
 )
 
 data class City(
@@ -52,7 +52,7 @@ data class Wind(
     val speed: Double
 )
 
-data class DailyForestcast(
+data class DailyForecast(
     val date:Long,
     val temperature: Temperature,
     val weather: List<Weather>,

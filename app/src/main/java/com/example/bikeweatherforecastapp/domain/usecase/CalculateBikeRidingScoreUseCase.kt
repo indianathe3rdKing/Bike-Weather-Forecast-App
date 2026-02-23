@@ -3,12 +3,12 @@ package com.example.bikeweatherforecastapp.domain.usecase
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingFactor
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingRecommendation
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingScore
-import com.example.bikeweatherforecastapp.domain.model.DailyForestcast
+import com.example.bikeweatherforecastapp.domain.model.DailyForecast
 import com.example.bikeweatherforecastapp.domain.model.Weather
 
 class CalculateBikeRidingScoreUseCase {
 
-    operator fun invoke(forestcast: DailyForestcast): BikeRidingScore {
+    operator fun invoke(forestcast: DailyForecast): BikeRidingScore {
         val factors = mutableListOf<BikeRidingFactor>()
 
         val tempScore = calculateTemperatureScore(forestcast.temperature.max)

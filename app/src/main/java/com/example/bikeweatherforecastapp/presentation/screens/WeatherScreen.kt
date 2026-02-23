@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import com.example.bikeweatherforecastapp.presentation.components.WeatherContent
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import org.koin.androidx.compose.koinViewModel
 @Composable
@@ -58,7 +59,7 @@ fun WeatherScreen(
                 LoadingScreen()
             }
             weatherState.error !=null ->{
-                ErrorSceen(
+                ErrorScreen(
                     error=weatherState.error!!,
                     onRetry= {
                         viewModel.checkLocationPermission()

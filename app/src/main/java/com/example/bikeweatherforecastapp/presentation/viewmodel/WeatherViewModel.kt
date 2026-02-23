@@ -14,9 +14,8 @@ import com.google.android.gms.location.LocationServices
 import androidx.compose.runtime.State
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
-import com.example.bikeweatherforecastapp.data.remote.Config
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingScore
-import com.example.bikeweatherforecastapp.domain.model.DailyForestcast
+import com.example.bikeweatherforecastapp.domain.model.DailyForecast
 import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
 import com.example.bikeweatherforecastapp.domain.model.WeatherState
 import com.google.android.gms.location.Priority
@@ -43,8 +42,8 @@ class WeatherViewModel(
 
     //score
     private val _dailyScores =
-        mutableStateOf<List<Pair<DailyForestcast, BikeRidingScore>>>(emptyList())
-    val dailyScores: State<List<Pair<DailyForestcast, BikeRidingScore>>> = _dailyScores
+        mutableStateOf<List<Pair<DailyForecast, BikeRidingScore>>>(emptyList())
+    val dailyScores: State<List<Pair<DailyForecast, BikeRidingScore>>> = _dailyScores
 
     fun checkLocationPermission() {
         val context = getApplication<Application>()
@@ -115,8 +114,8 @@ class WeatherViewModel(
         }
     }
 
-    private fun processForestIntoDaily(response: WeatherResponse): List<DailyForestcast> {
-        val allDayDailyForecasts = mutableListOf<DailyForestcast>()
+    private fun processForestIntoDaily(response: WeatherResponse): List<DailyForecast> {
+        val allDayDailyForecasts = mutableListOf<DailyForecast>()
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         //Group forecast items by date string (yyyy-MM-dd)
@@ -144,7 +143,7 @@ class WeatherViewModel(
                     .maxByOrNull { it.value.size }
                     ?.value?.first()?: firstForecast.weather.first()
 
-                val dailyForecast= DailyForestcast(
+                val dailyForecast= DailyForecast(
                     date= firstForecast.date,
                     temperature = Temperature(
                         day= firstForecast.main.temp,
