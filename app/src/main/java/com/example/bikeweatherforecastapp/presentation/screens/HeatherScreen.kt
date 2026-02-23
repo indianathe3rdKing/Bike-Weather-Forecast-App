@@ -24,6 +24,11 @@ import com.example.bikeweatherforecastapp.domain.model.DailyForecast
 import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import com.example.bikeweatherforecastapp.presentation.utils.Utils
+import com.example.bikeweatherforecastapp.ui.theme.CardBackground
+import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
+import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
+import com.example.bikeweatherforecastapp.ui.theme.TextSecondary
+import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 
 @Composable
 fun HeaderSection(
@@ -35,7 +40,7 @@ fun HeaderSection(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors= CardDefaults.cardColors(
-            containerColor = Color(0xFF1E2938).copy(alpha = 0.8f)
+            containerColor = CardBackground.copy(alpha = 0.8f)
         )
     ) {
         Column(
@@ -44,14 +49,14 @@ fun HeaderSection(
         ) {
             Text(
                 text="🚴 Bike Riding Forest",
-                color=Color.White
+                color=TextPrimary
                 , fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text="${weatherData.city.name}, ${weatherData.city.country}",
-                color = Color(0xFFCBD5E1),
+                color = TextSecondary,
                 fontSize = 16.sp
             )
 
@@ -63,20 +68,20 @@ fun HeaderSection(
                 ) {
                     Text(
                         text="🥇Best day :",
-                        color=Color(0xFF22CFFE),
+                        color=CyanAccent,
                         fontSize = 18.sp, fontWeight = FontWeight.SemiBold
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
                         text= Utils.formatDate(bestForecast.date),
-                        color=Color.White,
+                        color=TextPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
                         text = bestScore.overallRating,
-                        color = Color(0xFF94A3B8),
+                        color = TextTertiary,
                         fontSize = 14.sp
                     )
                 }

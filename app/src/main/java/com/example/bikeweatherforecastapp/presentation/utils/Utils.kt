@@ -3,6 +3,11 @@ package com.example.bikeweatherforecastapp.presentation.utils
 
 import androidx.compose.ui.graphics.Color
 import com.example.bikeweatherforecastapp.data.remote.Config
+import com.example.bikeweatherforecastapp.ui.theme.ScoreDangerous
+import com.example.bikeweatherforecastapp.ui.theme.ScoreExcellent
+import com.example.bikeweatherforecastapp.ui.theme.ScoreGood
+import com.example.bikeweatherforecastapp.ui.theme.ScoreModerate
+import com.example.bikeweatherforecastapp.ui.theme.ScorePoor
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -20,12 +25,11 @@ object Utils {
 
     fun getScoreColor(score: Int): Color {
         return when{
-            score>= 80 -> Color(0xFF22C55E)// Green- Excellent
-            score>=60 -> Color(0xFF4ADE80)// Light Green - Good
-            score>=40 -> Color(0xFFFACC15) //Yellow - Moderate
-            score>=20 -> Color(0xFFF87171) //Red - Poor
-            else -> Color(0xFFDC2626)// Red - Dangerous
-
+            score>= 80 -> ScoreExcellent         // Green- Excellent
+            score>=60 -> ScoreGood               // Light Green - Good
+            score>=40 -> ScoreModerate           // Yellow - Moderate
+            score>=20 -> ScorePoor               // Red - Poor
+            else -> ScoreDangerous               // Dark Red - Dangerous
         }
     }
 

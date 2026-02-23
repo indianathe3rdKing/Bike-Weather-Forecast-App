@@ -31,6 +31,12 @@ import com.example.bikeweatherforecastapp.domain.model.DailyForecast
 import com.example.bikeweatherforecastapp.presentation.utils.Utils
 import com.example.bikeweatherforecastapp.presentation.utils.Utils.getScoreColor
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
+import com.example.bikeweatherforecastapp.ui.theme.Success
+import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
+import com.example.bikeweatherforecastapp.ui.theme.TextSecondary
+import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
+import com.example.bikeweatherforecastapp.ui.theme.CardBackground
+import com.example.bikeweatherforecastapp.ui.theme.CardBackgroundBest
 
 
 @Composable
@@ -42,9 +48,9 @@ fun BikeRidingCard(
 ){
     val scoreColor = getScoreColor(score.score)
     val backgroundColor = if (isBest){
-        Color(0xFF064E38).copy(0.3f)
+        CardBackgroundBest.copy(0.3f)
     }else{
-        Color(0xFF1E293B).copy(0.8f)
+        CardBackground.copy(0.8f)
     }
 
     Card(
@@ -52,7 +58,7 @@ fun BikeRidingCard(
             .fillMaxWidth()
             .then(
                 if (isBest) Modifier.border(
-                 3.dp,Color(0xFF22C55E) ,
+                 3.dp, Success ,
                     RoundedCornerShape(20.dp)
                 )else Modifier
             ), colors = CardDefaults.cardColors(
@@ -72,7 +78,7 @@ fun BikeRidingCard(
                 ) {
                     Text(
                         text = Utils.formatDate(forecast.date),
-                        color = Color.White,
+                        color = TextPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -95,7 +101,7 @@ fun BikeRidingCard(
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text=score.overallRating,
-                color=Color(0xFFCBD5E1),
+                color=TextSecondary,
                 fontSize = 14.sp
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -111,13 +117,13 @@ fun BikeRidingCard(
                 Column{
                     Text(
                         text= "${forecast.temperature.max.toInt()}° / ${forecast.temperature.min.toInt()}°",
-                        color = Color.White,
+                        color = TextPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text=forecast.weather.firstOrNull()?.description?.capitalize()?:"",
-                        color=Color(0xFF93A3B8),
+                        color=TextTertiary,
                         fontSize = 14.sp
                     )
                 }

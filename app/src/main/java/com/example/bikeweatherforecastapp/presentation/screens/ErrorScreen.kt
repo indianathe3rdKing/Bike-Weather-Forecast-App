@@ -13,11 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bikeweatherforecastapp.ui.theme.Success
+import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
+import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 
 @Composable
 fun ErrorScreen(error: String,onRetry:()-> Unit){
@@ -35,14 +37,14 @@ fun ErrorScreen(error: String,onRetry:()-> Unit){
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text="Oops! Something went wrong",
-            color=Color.White,
+            color=TextPrimary,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text=error,
-            color=Color(0xFF94A3B8),
+            color=TextTertiary,
             fontSize = 18.sp,
             fontWeight = FontWeight.Normal
             , textAlign= TextAlign.Center
@@ -51,8 +53,8 @@ fun ErrorScreen(error: String,onRetry:()-> Unit){
         Button(
             onClick = onRetry,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF22C55E),
-                contentColor = Color.White
+                containerColor = Success,
+                contentColor = TextPrimary
             ),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.padding(horizontal = 12.dp)

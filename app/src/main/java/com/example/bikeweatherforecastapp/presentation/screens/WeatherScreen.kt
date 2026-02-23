@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import com.example.bikeweatherforecastapp.presentation.components.RefreshPullCircle
 import com.example.bikeweatherforecastapp.presentation.components.WeatherContent
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -67,9 +68,14 @@ fun WeatherScreen(
                 )
             }
             weatherState.weatherData != null ->{
-                WeatherContent(
+                RefreshPullCircle(
+                    isRefreshing = weatherState.isLoading,
+                    onRefresh = {viewModel.checkLocationPermission()},
+
+                    {WeatherContent(
                     weatherData= weatherState.weatherData!!,
                     viewModel=viewModel
+                )}
                 )
             }
             else ->{

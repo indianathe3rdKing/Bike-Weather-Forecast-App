@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
+import com.example.bikeweatherforecastapp.ui.theme.ProgressBackground
 
 
 @Composable
@@ -33,7 +35,7 @@ fun CircularProgressBar(
 
             //Background circle
             drawCircle(
-                color=Color(0xFF475569),
+                color=ProgressBackground,
                 radius=radius,
                 style= Stroke(width=strokeWidth)
             )
@@ -51,7 +53,7 @@ fun CircularProgressBar(
 
         Text(
             text = "$score%",
-            color= Color.White,
+            color= TextPrimary,
             fontSize=14.sp,
             fontWeight = FontWeight.Bold
         )
