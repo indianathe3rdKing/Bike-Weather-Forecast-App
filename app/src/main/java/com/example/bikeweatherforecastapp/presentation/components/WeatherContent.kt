@@ -44,7 +44,7 @@ fun WeatherContent(
                 BikeRidingCard(
                     forecast=forecast,
                     score=score,
-                    viewModel=viewModel, isBest = bestDay?.first?.date == forecast.date
+                     isBest = bestDay?.first?.date == forecast.date
                 )
             }
         }

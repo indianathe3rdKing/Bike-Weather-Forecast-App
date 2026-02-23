@@ -37,7 +37,7 @@ import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewMode
 fun BikeRidingCard(
     forecast: DailyForecast,
     score: BikeRidingScore,
-    viewModel: WeatherViewModel,
+
     isBest: Boolean
 ){
     val scoreColor = getScoreColor(score.score)
@@ -66,18 +66,29 @@ fun BikeRidingCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxSize()
             ) {
-                Text(
-                    text= Utils.formatDate(forecast.date),
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = score.recommendation.name,
-                    color = scoreColor,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                Column(
+                    modifier = Modifier.weight(1f)
+
+                ) {
+                    Text(
+                        text = Utils.formatDate(forecast.date),
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = score.recommendation.name,
+                        color = scoreColor,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                //Circular progress bar
+                CircularProgressBar(
+                    score = score.score, color=scoreColor,
+                    modifier = Modifier.size(60.dp)
                 )
             }
 

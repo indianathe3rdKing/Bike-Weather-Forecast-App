@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingScore
 import com.example.bikeweatherforecastapp.domain.model.DailyForecast
+import com.example.bikeweatherforecastapp.domain.model.Temperature
 import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
 import com.example.bikeweatherforecastapp.domain.model.WeatherState
 import com.google.android.gms.location.Priority
@@ -131,7 +132,7 @@ class WeatherViewModel(
                     it.main.tempMin
                 }
                 val avgHumidity = singleDayForecast.map { it.main.humidity }.average().toInt()
-                val avgWindSpeed = singleDayForecast.map { it.wind.speed }
+                val avgWindSpeed = singleDayForecast.map { it.wind.speed }.average()
                 val avgPrecipitation = singleDayForecast.map { it.precipitationPredictability
                 }.average()
 
@@ -146,10 +147,10 @@ class WeatherViewModel(
                 val dailyForecast= DailyForecast(
                     date= firstForecast.date,
                     temperature = Temperature(
-                        day= firstForecast.main.temp,
-                        min= minTemp,
-                        max=maxTemp,
-                        night=firstForecast.main.temp
+                        day = firstForecast.main.temp,
+                        min = minTemp,
+                        max = maxTemp,
+                        night = firstForecast.main.temp
                     ),
                     weather=listOf(mostCommonWeather),
                     humidity = avgHumidity,

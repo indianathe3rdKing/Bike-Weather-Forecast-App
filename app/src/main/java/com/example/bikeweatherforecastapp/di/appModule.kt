@@ -1,11 +1,14 @@
 package com.example.bikeweatherforecastapp.di
 
 import com.example.bikeweatherforecastapp.data.remote.Config
+import com.example.bikeweatherforecastapp.data.remote.WeatherApiService
 import com.example.bikeweatherforecastapp.data.repository.WeatherRepositoryImpl
 import com.example.bikeweatherforecastapp.domain.repository.WeatherRepository
 import com.example.bikeweatherforecastapp.domain.usecase.CalculateBikeRidingScoreUseCase
 import com.example.bikeweatherforecastapp.domain.usecase.GetWeatherUseCase
-import org.koin.core.module.dsl.viewModel
+import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
+import org.koin.android.ext.koin.androidApplication
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,7 +23,7 @@ val appModule = module {
             .build()
     }
 
-    single { get<Retrofit>().create(WeatherRepository::class.java) }
+    single { get<Retrofit>().create(WeatherApiService::class.java) }
 
     single<WeatherRepository>{
         WeatherRepositoryImpl(get())
@@ -34,7 +37,5 @@ val appModule = module {
         CalculateBikeRidingScoreUseCase()
     }
 
-    single { GetWeatherUseCase(get()) }
-
-    viewModel{WeatherViewModel(get(),get(),get())}
+    viewModel{ WeatherViewModel(get(), get(), get()) }
 }
