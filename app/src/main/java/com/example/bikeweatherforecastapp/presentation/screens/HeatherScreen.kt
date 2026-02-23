@@ -43,7 +43,7 @@ fun HeaderSection(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text="🚵 Bike Riding Forest",
+                text="🚴 Bike Riding Forest",
                 color=Color.White
                 , fontSize = 24.sp,
                 fontWeight = FontWeight.Bold

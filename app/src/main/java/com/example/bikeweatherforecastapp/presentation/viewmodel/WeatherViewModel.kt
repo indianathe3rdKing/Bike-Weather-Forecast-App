@@ -127,7 +127,7 @@ class WeatherViewModel(
         dailyGroups.values.forEach { singleDayForecast ->
             if (singleDayForecast.isNotEmpty()) {
                 val firstForecast = singleDayForecast.first()
-                val maxTemp = singleDayForecast.minOf { it.main.tempMax }
+                val maxTemp = singleDayForecast.maxOf { it.main.tempMax }
                 val minTemp = singleDayForecast.minOf {
                     it.main.tempMin
                 }

@@ -26,7 +26,7 @@ fun WelcomeScreen(){
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text="🚵"
+            text="🚴"
             , fontSize = 64.sp
         )
         Spacer(modifier = Modifier.height(16.dp))
