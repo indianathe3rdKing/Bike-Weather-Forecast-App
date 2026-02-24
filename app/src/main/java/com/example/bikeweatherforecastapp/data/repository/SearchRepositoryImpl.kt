@@ -1,5 +1,6 @@
 package com.example.bikeweatherforecastapp.data.repository
 
+import android.util.Log
 import com.example.bikeweatherforecastapp.BuildConfig
 import com.example.bikeweatherforecastapp.data.remote.WeatherApiService
 import com.example.bikeweatherforecastapp.domain.model.Coordinates
@@ -10,7 +11,9 @@ class SearchRepositoryImpl(
 ) : SearchRepository{
     override suspend fun searchCity(city: String): Coordinates? {
         return try {
+            Log.d("SearchRepositoryImpl", "Searching for city: $city")
             val  response= apiService.getGeoLocation(city=city, apiKey = BuildConfig.API_KEY)
+            Log.d("SearchRepositoryImpl", "Geo API response: $response")
 
             val firstResult= response.firstOrNull()
 
@@ -21,6 +24,7 @@ class SearchRepositoryImpl(
                 )
             }
         }catch (e: Exception){
+            Log.e("SearchRepositoryImpl", "Error searching city: ${e.message}", e)
             null
         }
     }

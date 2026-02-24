@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
 import android.location.Location
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -60,11 +61,20 @@ class WeatherViewModel(
     }
 
     fun searchCity(city: String){
+        Log.d(TAG, "searchCity called with: $city")
         viewModelScope.launch {
             val coordinates= searchCityUseCase(city)
+            Log.d(TAG, "searchCity result: $coordinates")
 
             coordinates?.let {
+                Log.i(TAG,"Coordinates: ${it.lat}, ${it.lon}")
                 fetchWeatherData(it.lat,it.lon)
+            } ?: run {
+                Log.w(TAG, "City not found: $city")
+                _weatherState.value = _weatherState.value.copy(
+                    isLoading = false,
+                    error = "City not found: $city"
+                )
             }
         }
     }
@@ -179,3 +189,4 @@ class WeatherViewModel(
 
 }
 
+private const val TAG= "WeatherViewModel"

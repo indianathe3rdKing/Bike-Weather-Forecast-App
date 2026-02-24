@@ -14,7 +14,7 @@ interface WeatherApiService {
         @Query("units")units: String="metric"
     ): WeatherResponse
 
-    @GET("data/geo/1.0/direct")
+    @GET("geo/1.0/direct")
     suspend fun getGeoLocation(
         @Query("q")city:String,
         @Query("limit")limit:Int=1,
