@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-
 import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
 import com.example.bikeweatherforecastapp.presentation.screens.HeaderSection
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
@@ -28,6 +28,7 @@ fun WeatherContent(
     weatherData: WeatherResponse,
     viewModel: WeatherViewModel
 ) {
+
     val dailyScores by viewModel.dailyScores
     val bestDay = dailyScores.maxByOrNull { it.second.score }
     val focusManager= LocalFocusManager.current
@@ -53,16 +54,19 @@ fun WeatherContent(
 
     ) {
         SearchInput(viewModel)
-        HeaderSection(weatherData, bestDay?.first, bestDay?.second, viewModel)
-
+        HeaderSection(weatherData, bestDay?.first, bestDay?.second)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(
+                top = 16.dp,
+                bottom = 0.dp
+            )
         ) {
             items(dailyScores){
-                (forecast,score)->
+                (forecast,score) ->
                 BikeRidingCard(
                     forecast=forecast,
                     score=score,

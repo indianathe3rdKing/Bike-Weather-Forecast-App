@@ -1,0 +1,113 @@
+package com.example.bikeweatherforecastapp.presentation.components
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
+import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
+import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
+import com.example.bikeweatherforecastapp.ui.theme.CardBackground
+import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
+import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
+
+@Composable
+fun MainTabNavigator(
+    weatherData: WeatherResponse,
+    viewModel: WeatherViewModel
+) {
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+
+    Scaffold(
+        containerColor = Color.Transparent,
+        content = { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+            ) {
+                when (selectedTabIndex) {
+                    0 -> WeatherContent(weatherData, viewModel)
+                    1 -> SettingsContent()
+                }
+            }
+        },
+        bottomBar = {
+            Surface(
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+                color = CardBackground
+            ) {
+                NavigationBar(
+                    containerColor = Color.Transparent
+                ) {
+                    TabNavigationItem(
+                        title = "Home",
+                        icon = Icons.Default.Home,
+                        selected = selectedTabIndex == 0,
+                        onClick = { selectedTabIndex = 0 }
+                    )
+                    TabNavigationItem(
+                        title = "Settings",
+                        icon = Icons.Default.Settings,
+                        selected = selectedTabIndex == 1,
+                        onClick = { selectedTabIndex = 1 }
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun RowScope.TabNavigationItem(
+    title: String,
+    icon: ImageVector,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    NavigationBarItem(
+        selected = selected,
+        onClick = onClick,
+        icon = {
+            Icon(
+                imageVector = icon,
+                contentDescription = title
+            )
+        },
+        label = { Text(title) },
+        colors = NavigationBarItemDefaults.colors(
+            selectedIconColor = CyanAccent,
+            selectedTextColor = CyanAccent,
+            unselectedIconColor = TextTertiary,
+            unselectedTextColor = TextTertiary,
+            indicatorColor = CardBackground.copy(alpha = 0.5f)
+        )
+    )
+}
+
+@Composable
+fun SettingsContent() {
+    // Placeholder for settings
+}
+
+
+

@@ -65,6 +65,8 @@ android {
 }
 
 dependencies {
+    val voyagerVersion = "1.1.0-beta02"
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -104,4 +106,9 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
+
+    // BottomSheetNavigator
+    implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:${voyagerVersion}")
+// TabNavigator
+    implementation("cafe.adriel.voyager:voyager-tab-navigator:${voyagerVersion}")
 }

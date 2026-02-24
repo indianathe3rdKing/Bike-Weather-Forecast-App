@@ -35,7 +35,7 @@ fun HeaderSection(
     weatherData: WeatherResponse,
     bestForecast: DailyForecast?,
     bestScore: BikeRidingScore?,
-    viewModel: WeatherViewModel
+
 ){
     Card(
         modifier = Modifier.fillMaxWidth(),
