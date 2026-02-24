@@ -19,6 +19,7 @@ import com.example.bikeweatherforecastapp.domain.model.DailyForecast
 import com.example.bikeweatherforecastapp.domain.model.Temperature
 import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
 import com.example.bikeweatherforecastapp.domain.model.WeatherState
+import com.example.bikeweatherforecastapp.domain.usecase.SearchCityUseCase
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -28,6 +29,7 @@ class WeatherViewModel(
     application: Application,
     private val getWeatherUseCase: GetWeatherUseCase,
     private val calculateBikeRidingScoreUseCase: CalculateBikeRidingScoreUseCase,
+    private val searchCityUseCase: SearchCityUseCase
 ) : AndroidViewModel(application) {
     //location
     private val fusedLocationClient: FusedLocationProviderClient = LocationServices
@@ -57,6 +59,15 @@ class WeatherViewModel(
         if (hasPermission) getCurrentLocation()
     }
 
+    fun searchCity(city: String){
+        viewModelScope.launch {
+            val coordinates= searchCityUseCase(city)
+
+            coordinates?.let {
+                fetchWeatherData(it.lat,it.lon)
+            }
+        }
+    }
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private fun getCurrentLocation() {

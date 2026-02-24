@@ -9,6 +9,13 @@ data class WeatherResponse(
     val daily: List<DailyForecast> = emptyList()
 )
 
+data class GeoResponse(
+    val name: String,
+    val lat: Double,
+    val lon: Double,
+    val country: String
+)
+
 data class City(
     val id: Int,
     val name: String,

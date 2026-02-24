@@ -31,6 +31,7 @@ fun WeatherContent(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        SearchInput(viewModel)
         HeaderSection(weatherData, bestDay?.first, bestDay?.second, viewModel)
 
         LazyColumn(
