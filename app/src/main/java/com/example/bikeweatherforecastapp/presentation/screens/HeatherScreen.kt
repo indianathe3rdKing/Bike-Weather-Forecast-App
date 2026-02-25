@@ -40,7 +40,10 @@ fun HeaderSection(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors= CardDefaults.cardColors(
-            containerColor = CardBackground.copy(alpha = 0.8f)
+            containerColor = CardBackground.copy(alpha = 0.95f)
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 12.dp
         )
     ) {
         Column(

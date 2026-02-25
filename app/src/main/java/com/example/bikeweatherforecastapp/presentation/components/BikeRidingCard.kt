@@ -63,7 +63,10 @@ fun BikeRidingCard(
                 )else Modifier
             ), colors = CardDefaults.cardColors(
                 containerColor = backgroundColor
-            ), shape = RoundedCornerShape(20.dp)
+            ), shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        )
     ){
         Column(
             modifier = Modifier.padding(20.dp)

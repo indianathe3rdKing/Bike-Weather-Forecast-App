@@ -2,6 +2,8 @@ package com.example.bikeweatherforecastapp.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,10 +23,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
+import com.example.bikeweatherforecastapp.presentation.screens.SettingsScreen
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import com.example.bikeweatherforecastapp.ui.theme.CardBackground
 import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
@@ -36,18 +41,28 @@ fun MainTabNavigator(
     viewModel: WeatherViewModel
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-
+    var NavColor= CardBackground.copy(0.9f)
     Scaffold(
         containerColor = Color.Transparent,
         content = { innerPadding ->
             Box(
                 modifier = Modifier
-                    .padding(innerPadding)
+                    .padding(
+                        start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                        top =
+                            innerPadding.calculateTopPadding(),
+                        end = innerPadding.calculateEndPadding(
+                            LayoutDirection.Ltr
+                        ),
+                        bottom = 0.dp
+                    )
                     .fillMaxSize()
+
+
             ) {
                 when (selectedTabIndex) {
                     0 -> WeatherContent(weatherData, viewModel)
-                    1 -> SettingsContent()
+                    1 -> SettingsScreen()
                 }
             }
         },
@@ -57,7 +72,9 @@ fun MainTabNavigator(
                 color = CardBackground
             ) {
                 NavigationBar(
-                    containerColor = Color.Transparent
+                    containerColor = NavColor,
+                    tonalElevation = 2.dp,
+                    modifier = Modifier.shadow(2.dp)
                 ) {
                     TabNavigationItem(
                         title = "Home",
@@ -103,11 +120,3 @@ private fun RowScope.TabNavigationItem(
         )
     )
 }
-
-@Composable
-fun SettingsContent() {
-    // Placeholder for settings
-}
-
-
-
