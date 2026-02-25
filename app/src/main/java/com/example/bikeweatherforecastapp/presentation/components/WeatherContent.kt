@@ -62,7 +62,7 @@ fun WeatherContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(
                 top = 16.dp,
-                bottom = 0.dp
+                bottom = 124.dp
             )
         ) {
             items(dailyScores){

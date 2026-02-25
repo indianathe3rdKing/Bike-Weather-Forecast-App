@@ -35,17 +35,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bikeweatherforecastapp.presentation.components.SettingsActionItem
 import com.example.bikeweatherforecastapp.presentation.components.SettingsToggleItem
+import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import com.example.bikeweatherforecastapp.ui.theme.CardBackground
 import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
 import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 import com.example.bikeweatherforecastapp.ui.theme.TextSecondary
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 import com.example.bikeweatherforecastapp.ui.theme.Warning
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
     // State for toggle settings
-    var isMetricUnit by remember { mutableStateOf(true) }
+    val weatherState by viewModel.weatherState
+    val isMetricUnit = weatherState.isMetric
     var notificationsEnabled by remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
@@ -53,8 +56,9 @@ fun SettingsScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
             .verticalScroll(scrollState)
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 100.dp) // Extra padding for bottom navigation bar
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -128,14 +132,15 @@ fun SettingsScreen() {
                     UnitToggleButton(
                         text = "Metric (°C)",
                         isSelected = isMetricUnit,
-                        onClick = { isMetricUnit = true },
+                        onClick = { viewModel.updateUnit(true) },
                         modifier = Modifier.weight(1f)
                     )
                     UnitToggleButton(
                         text = "Imperial (°F)",
                         isSelected = !isMetricUnit,
-                        onClick = { isMetricUnit = false },
+                        onClick = { viewModel.updateUnit(false) },
                         modifier = Modifier.weight(1f)
+
                     )
                 }
             }
@@ -189,7 +194,7 @@ fun SettingsScreen() {
             onClick = { }
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(48.dp))
     }
 }
 

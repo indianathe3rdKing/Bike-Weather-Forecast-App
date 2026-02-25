@@ -60,7 +60,7 @@ data class Wind(
 )
 
 data class DailyForecast(
-    val date:Long,
+    val date: Long,
     val temperature: Temperature,
     val weather: List<Weather>,
     val humidity: Int,
@@ -76,8 +76,9 @@ data class Temperature(
 )
 
 data class WeatherState(
-    val isLoading: Boolean= false,
-    val weatherData: WeatherResponse?= null,
-    val error: String?=null
+    val isLoading: Boolean = false,
+    val weatherData: WeatherResponse? = null,
+    val error: String? = null,
+    val isMetric: Boolean = true
 )
 

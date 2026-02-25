@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +38,7 @@ import com.example.bikeweatherforecastapp.ui.theme.TextSecondary
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 import com.example.bikeweatherforecastapp.ui.theme.CardBackground
 import com.example.bikeweatherforecastapp.ui.theme.CardBackgroundBest
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
@@ -44,14 +46,29 @@ fun BikeRidingCard(
     forecast: DailyForecast,
     score: BikeRidingScore,
 
-    isBest: Boolean
+    isBest: Boolean,
+    viewModel: WeatherViewModel=koinViewModel()
 ){
     val scoreColor = getScoreColor(score.score)
+    val weatherState by viewModel.weatherState
     val backgroundColor = if (isBest){
         CardBackgroundBest.copy(0.3f)
     }else{
         CardBackground.copy(0.8f)
     }
+     lateinit var temperatureMax: String
+     lateinit var temperatureMin: String
+     if (weatherState.isMetric){
+         temperatureMax= "${forecast.temperature.max.toInt()}°C"
+         temperatureMin= "${forecast.temperature.min.toInt()}°C"
+
+     }else{
+         temperatureMax= "${Utils.toFahrenheit(forecast.temperature.max).toInt()}°F"
+         temperatureMin="${Utils.toFahrenheit(forecast.temperature.min).toInt()}°F"
+
+     }
+
+
 
     Card(
         modifier = Modifier
@@ -119,7 +136,7 @@ fun BikeRidingCard(
                 Spacer(modifier = Modifier.width(15.dp))
                 Column{
                     Text(
-                        text= "${forecast.temperature.max.toInt()}° / ${forecast.temperature.min.toInt()}°",
+                        text= "$temperatureMax / $temperatureMin",
                         color = TextPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold

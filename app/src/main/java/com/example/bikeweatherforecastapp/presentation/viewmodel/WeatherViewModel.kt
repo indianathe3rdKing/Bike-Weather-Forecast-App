@@ -49,6 +49,11 @@ class WeatherViewModel(
         mutableStateOf<List<Pair<DailyForecast, BikeRidingScore>>>(emptyList())
     val dailyScores: State<List<Pair<DailyForecast, BikeRidingScore>>> = _dailyScores
 
+    fun updateUnit(isMetric: Boolean) {
+        _weatherState.value = _weatherState.value.copy(
+            isMetric = isMetric
+        )
+    }
     fun checkLocationPermission() {
         val context = getApplication<Application>()
         val hasPermission = ContextCompat.checkSelfPermission(
