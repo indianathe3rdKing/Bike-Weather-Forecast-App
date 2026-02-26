@@ -43,6 +43,12 @@ class WeatherViewModel(
             started = SharingStarted.Eagerly,
             initialValue = dataStoreManager.getMetricSync()
         )
+    val savedCity = dataStoreManager.city
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = dataStoreManager.getCitySync()
+        )
 
 
     //location
@@ -62,11 +68,6 @@ class WeatherViewModel(
         mutableStateOf<List<Pair<DailyForecast, BikeRidingScore>>>(emptyList())
     val dailyScores: State<List<Pair<DailyForecast, BikeRidingScore>>> = _dailyScores
 
-    fun updateUnit(isMetric: Boolean) {
-        _weatherState.value = _weatherState.value.copy(
-            isMetric = isMetric
-        )
-    }
 
     fun updateMetric(metric: Boolean){
         viewModelScope.launch {
@@ -93,6 +94,7 @@ class WeatherViewModel(
             coordinates?.let {
                 Log.i(TAG,"Coordinates: ${it.lat}, ${it.lon}")
                 fetchWeatherData(it.lat,it.lon)
+                dataStoreManager.setCity(city)
             } ?: run {
                 Log.w(TAG, "City not found: $city")
                 _weatherState.value = _weatherState.value.copy(

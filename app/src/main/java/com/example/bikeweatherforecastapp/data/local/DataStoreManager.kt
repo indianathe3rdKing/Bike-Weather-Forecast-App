@@ -30,8 +30,8 @@ class DataStoreManager(private val context: Context){
 
     //Save city to data store
     suspend fun setCity(city: String){
-        context.dataStoreManager.edit { preferences->
-            preferences[CITY_KEY] = city
+        context.dataStoreManager.edit { prefs->
+            prefs[CITY_KEY] = city
         }
     }
 
@@ -48,6 +48,10 @@ class DataStoreManager(private val context: Context){
     // Get metric value synchronously (for initial state)
     fun getMetricSync(): Boolean = runBlocking {
         context.dataStoreManager.data.first()[METRIC_KEY] ?: true
+    }
+
+    fun getCitySync(): String = runBlocking {
+        context.dataStoreManager.data.first()[CITY_KEY] ?:""
     }
 
 

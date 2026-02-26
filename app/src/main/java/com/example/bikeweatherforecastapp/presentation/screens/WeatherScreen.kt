@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -22,22 +26,36 @@ fun WeatherScreen(
 ){
     val weatherState by viewModel.weatherState
     val locationPermissionGranted by viewModel.locationPermissionGranted
+    val savedCity = viewModel.savedCity.collectAsState().value
+    var isInitialized by remember{ mutableStateOf(false)}
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) {
         isGranted->
         if(isGranted){
-            viewModel.checkLocationPermission()
+            if(savedCity.isNotEmpty()){
+                viewModel.searchCity(savedCity)
+            }else{
+                viewModel.checkLocationPermission()
+            }
+
         }
+        isInitialized = true
     }
 
     LaunchedEffect(Unit) {
+        if(isInitialized) return@LaunchedEffect
+
         if (!locationPermissionGranted){
             permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
 
         }else{
-            viewModel.checkLocationPermission()
+            if(savedCity.isNotEmpty()){
+                viewModel.searchCity(savedCity)
+            }else{
+                viewModel.checkLocationPermission()
+            }
         }
     }
 
