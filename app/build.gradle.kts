@@ -111,4 +111,7 @@ dependencies {
     implementation("cafe.adriel.voyager:voyager-bottom-sheet-navigator:${voyagerVersion}")
 // TabNavigator
     implementation("cafe.adriel.voyager:voyager-tab-navigator:${voyagerVersion}")
+
+// DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }

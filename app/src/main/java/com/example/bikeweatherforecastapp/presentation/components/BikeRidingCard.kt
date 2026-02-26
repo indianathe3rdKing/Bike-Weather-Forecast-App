@@ -18,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,7 +51,7 @@ fun BikeRidingCard(
     viewModel: WeatherViewModel=koinViewModel()
 ){
     val scoreColor = getScoreColor(score.score)
-    val weatherState by viewModel.weatherState
+    val weatherMetric = viewModel.isMetric.collectAsState().value
     val backgroundColor = if (isBest){
         CardBackgroundBest.copy(0.3f)
     }else{
@@ -58,7 +59,7 @@ fun BikeRidingCard(
     }
      lateinit var temperatureMax: String
      lateinit var temperatureMin: String
-     if (weatherState.isMetric){
+     if (weatherMetric){
          temperatureMax= "${forecast.temperature.max.toInt()}°C"
          temperatureMin= "${forecast.temperature.min.toInt()}°C"
 

@@ -15,6 +15,7 @@ import com.google.android.gms.location.LocationServices
 import androidx.compose.runtime.State
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
+import com.example.bikeweatherforecastapp.data.local.DataStoreManager
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingScore
 import com.example.bikeweatherforecastapp.domain.model.DailyForecast
 import com.example.bikeweatherforecastapp.domain.model.Temperature
@@ -22,6 +23,8 @@ import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
 import com.example.bikeweatherforecastapp.domain.model.WeatherState
 import com.example.bikeweatherforecastapp.domain.usecase.SearchCityUseCase
 import com.google.android.gms.location.Priority
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -30,8 +33,18 @@ class WeatherViewModel(
     application: Application,
     private val getWeatherUseCase: GetWeatherUseCase,
     private val calculateBikeRidingScoreUseCase: CalculateBikeRidingScoreUseCase,
-    private val searchCityUseCase: SearchCityUseCase
+    private val searchCityUseCase: SearchCityUseCase,
+    private val dataStoreManager: DataStoreManager
 ) : AndroidViewModel(application) {
+
+    val isMetric = dataStoreManager.isMetric
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = dataStoreManager.getMetricSync()
+        )
+
+
     //location
     private val fusedLocationClient: FusedLocationProviderClient = LocationServices
         .getFusedLocationProviderClient(
@@ -53,6 +66,12 @@ class WeatherViewModel(
         _weatherState.value = _weatherState.value.copy(
             isMetric = isMetric
         )
+    }
+
+    fun updateMetric(metric: Boolean){
+        viewModelScope.launch {
+            dataStoreManager.setMetric(metric)
+        }
     }
     fun checkLocationPermission() {
         val context = getApplication<Application>()

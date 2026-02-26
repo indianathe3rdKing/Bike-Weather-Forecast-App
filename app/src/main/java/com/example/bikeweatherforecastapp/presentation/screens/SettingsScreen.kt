@@ -21,18 +21,23 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bikeweatherforecastapp.data.local.DataStoreManager
 import com.example.bikeweatherforecastapp.presentation.components.SettingsActionItem
 import com.example.bikeweatherforecastapp.presentation.components.SettingsToggleItem
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
@@ -42,13 +47,14 @@ import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 import com.example.bikeweatherforecastapp.ui.theme.TextSecondary
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 import com.example.bikeweatherforecastapp.ui.theme.Warning
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
     // State for toggle settings
-    val weatherState by viewModel.weatherState
-    val isMetricUnit = weatherState.isMetric
+
+    val isMetricUnit = viewModel.isMetric.collectAsState().value
     var notificationsEnabled by remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
@@ -101,7 +107,7 @@ fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    androidx.compose.material3.Icon(
+                    Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Units",
                         tint = CyanAccent,
@@ -132,13 +138,13 @@ fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
                     UnitToggleButton(
                         text = "Metric (°C)",
                         isSelected = isMetricUnit,
-                        onClick = { viewModel.updateUnit(true) },
+                        onClick = { viewModel.updateMetric(true) },
                         modifier = Modifier.weight(1f)
                     )
                     UnitToggleButton(
                         text = "Imperial (°F)",
                         isSelected = !isMetricUnit,
-                        onClick = { viewModel.updateUnit(false) },
+                        onClick = { viewModel.updateMetric(false) },
                         modifier = Modifier.weight(1f)
 
                     )
