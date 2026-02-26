@@ -27,35 +27,42 @@ fun WeatherScreen(
     val weatherState by viewModel.weatherState
     val locationPermissionGranted by viewModel.locationPermissionGranted
     val savedCity = viewModel.savedCity.collectAsState().value
+    val useCurrentLocation = viewModel.useCurrentLocation.collectAsState().value
     var isInitialized by remember{ mutableStateOf(false)}
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
-    ) {
-        isGranted->
-        if(isGranted){
-            if(savedCity.isNotEmpty()){
+    ) { isGranted ->
+        if (isGranted) {
+            // Respect the useCurrentLocation setting
+            if (useCurrentLocation) {
+                viewModel.checkLocationPermission()
+            } else if (savedCity.isNotEmpty()) {
                 viewModel.searchCity(savedCity)
-            }else{
+            } else {
+                // No saved city, fall back to current location
                 viewModel.checkLocationPermission()
             }
-
         }
         isInitialized = true
     }
 
     LaunchedEffect(Unit) {
-        if(isInitialized) return@LaunchedEffect
+        if (isInitialized) return@LaunchedEffect
 
-        if (!locationPermissionGranted){
+        if (!locationPermissionGranted) {
             permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-
-        }else{
-            if(savedCity.isNotEmpty()){
+        } else {
+            // Respect the useCurrentLocation setting
+            if (useCurrentLocation) {
+                viewModel.checkLocationPermission()
+            } else if (savedCity.isNotEmpty()) {
                 viewModel.searchCity(savedCity)
-            }else{
+            } else {
+                // No saved city, fall back to current location
                 viewModel.checkLocationPermission()
             }
+            isInitialized = true
         }
     }
 

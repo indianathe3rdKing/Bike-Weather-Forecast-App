@@ -50,6 +50,13 @@ class WeatherViewModel(
             initialValue = dataStoreManager.getCitySync()
         )
 
+    val useCurrentLocation = dataStoreManager.useCurrentLocation
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = dataStoreManager.getUseCurrentLocationSync()
+        )
+
 
     //location
     private val fusedLocationClient: FusedLocationProviderClient = LocationServices
@@ -74,6 +81,22 @@ class WeatherViewModel(
             dataStoreManager.setMetric(metric)
         }
     }
+
+    fun updateUseCurrentLocation(useCurrentLocation: Boolean) {
+        viewModelScope.launch {
+            dataStoreManager.setUseCurrentLocation(useCurrentLocation)
+            // If toggled on, immediately fetch current location weather
+            if (useCurrentLocation) {
+                checkLocationPermission()
+            } else {
+                // If toggled off and we have a saved city, use it
+                val city = dataStoreManager.getCitySync()
+                if (city.isNotEmpty()) {
+                    searchCity(city)
+                }
+            }
+        }
+    }
     fun checkLocationPermission() {
         val context = getApplication<Application>()
         val hasPermission = ContextCompat.checkSelfPermission(
@@ -95,6 +118,8 @@ class WeatherViewModel(
                 Log.i(TAG,"Coordinates: ${it.lat}, ${it.lon}")
                 fetchWeatherData(it.lat,it.lon)
                 dataStoreManager.setCity(city)
+                // Turn off "Use Current Location" when user manually searches for a city
+                dataStoreManager.setUseCurrentLocation(false)
             } ?: run {
                 Log.w(TAG, "City not found: $city")
                 _weatherState.value = _weatherState.value.copy(

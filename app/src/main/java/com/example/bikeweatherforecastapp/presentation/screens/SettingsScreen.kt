@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
@@ -55,6 +56,8 @@ fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
     // State for toggle settings
 
     val isMetricUnit = viewModel.isMetric.collectAsState().value
+    val useCurrentLocation = viewModel.useCurrentLocation.collectAsState().value
+    val savedCity = viewModel.savedCity.collectAsState().value
     var notificationsEnabled by remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
@@ -82,6 +85,23 @@ fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
             text = "Customize your app experience",
             color = TextTertiary,
             fontSize = 14.sp
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Location Section
+        SettingsSectionHeader(title = "Location")
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        SettingsToggleItem(
+            icon = Icons.Default.LocationOn,
+            title = "Use Current Location",
+            subtitle = if (useCurrentLocation) "Using device GPS location"
+                       else if (savedCity.isNotEmpty()) "Using: $savedCity"
+                       else "Search for a city to use",
+            checked = useCurrentLocation,
+            onCheckedChange = { viewModel.updateUseCurrentLocation(it) }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
