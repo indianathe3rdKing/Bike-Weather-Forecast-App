@@ -40,6 +40,9 @@ fun HeaderSection(
 
 ){
     Card(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 12.dp
+        ),
         colors= CardDefaults.cardColors(
             containerColor = CardBackground
         ),
@@ -48,9 +51,6 @@ fun HeaderSection(
                 1.dp,TextTertiary.copy(alpha = 0.5f),
                 RoundedCornerShape(16.dp)
             ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 12.dp
-        )
     ) {
         Column(
             modifier = Modifier.padding(24.dp)

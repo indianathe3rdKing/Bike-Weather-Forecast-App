@@ -48,50 +48,56 @@ fun BikeRidingCard(
     score: BikeRidingScore,
 
     isBest: Boolean,
-    viewModel: WeatherViewModel=koinViewModel()
-){
+    viewModel: WeatherViewModel = koinViewModel()
+) {
     val scoreColor = getScoreColor(score.score)
     val weatherMetric = viewModel.isMetric.collectAsState().value
-    val backgroundColor = if (isBest){
+    val backgroundColor = if (isBest) {
         CardBackgroundBest
-    }else{
+    } else {
         CardBackground
     }
-     lateinit var temperatureMax: String
-     lateinit var temperatureMin: String
-     if (weatherMetric){
-         temperatureMax= "${forecast.temperature.max.toInt()}°"
-         temperatureMin= "${forecast.temperature.min.toInt()}°"
+    lateinit var temperatureMax: String
+    lateinit var temperatureMin: String
+    if (weatherMetric) {
+        temperatureMax = "${forecast.temperature.max.toInt()}°"
+        temperatureMin = "${forecast.temperature.min.toInt()}°"
 
-     }else{
-         temperatureMax= "${Utils.toFahrenheit(forecast.temperature.max).toInt()}°"
-         temperatureMin="${Utils.toFahrenheit(forecast.temperature.min).toInt()}°"
+    } else {
+        temperatureMax = "${Utils.toFahrenheit(forecast.temperature.max).toInt()}°"
+        temperatureMin = "${Utils.toFahrenheit(forecast.temperature.min).toInt()}°"
 
-     }
+    }
 
 
 
     Card(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .then(
                 if (isBest) Modifier.border(
-                 3.dp, Success ,
+                    3.dp, Success,
                     RoundedCornerShape(20.dp)
-                )else Modifier
-            ), colors = CardDefaults.cardColors(
-                containerColor = backgroundColor
-            ), shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp
-        )
-    ){
+                ) else Modifier
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = backgroundColor
+        ),
+        shape = RoundedCornerShape(20.dp),
+
+
+        ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
                     modifier = Modifier.weight(1f)
@@ -114,15 +120,15 @@ fun BikeRidingCard(
 
                 //Circular progress bar
                 CircularProgressBar(
-                    score = score.score, color=scoreColor,
+                    score = score.score, color = scoreColor,
                     modifier = Modifier.size(60.dp)
                 )
             }
 
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text=score.overallRating,
-                color=TextSecondary,
+                text = score.overallRating,
+                color = TextSecondary,
                 fontSize = 14.sp
             )
             Spacer(modifier = Modifier.height(12.dp))
@@ -130,21 +136,21 @@ fun BikeRidingCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    model = Utils.getWeatherIconUrl(forecast.weather.firstOrNull()?.icon?:""),
+                    model = Utils.getWeatherIconUrl(forecast.weather.firstOrNull()?.icon ?: ""),
                     contentDescription = forecast.weather.firstOrNull()?.description,
                     modifier = Modifier.size(40.dp)
                 )
                 Spacer(modifier = Modifier.width(15.dp))
-                Column{
+                Column {
                     Text(
-                        text= "$temperatureMax / $temperatureMin",
+                        text = "$temperatureMax / $temperatureMin",
                         color = TextPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Text(
-                        text=forecast.weather.firstOrNull()?.description?.capitalize()?:"",
-                        color=TextTertiary,
+                        text = forecast.weather.firstOrNull()?.description?.capitalize() ?: "",
+                        color = TextTertiary,
                         fontSize = 14.sp
                     )
                 }
@@ -152,29 +158,28 @@ fun BikeRidingCard(
 
             Spacer(modifier = Modifier.height(16.dp))
             //Show factors with better layout
-            val maxFactorHeight = remember(score.factors){
+            val maxFactorHeight = remember(score.factors) {
                 //Calculate the maximum height for factors
                 score.factors.maxOfOrNull { factor ->
                     //More generous height calculation to ensure all content is visible
-                    val baseHeight=100.dp
+                    val baseHeight = 100.dp
                     val extraHeight = when {
-                        factor.description.length>30->30.dp
-                        factor.description.length>20->20.dp
-                        else->0.dp
+                        factor.description.length > 30 -> 30.dp
+                        factor.description.length > 20 -> 20.dp
+                        else -> 0.dp
                     }
-                    baseHeight+extraHeight
-                }?:120.dp
+                    baseHeight + extraHeight
+                } ?: 120.dp
 
             }
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(score.factors){
-                    factor->
+                items(score.factors) { factor ->
                     FactorItem(
-                        factor= factor,
-                        height= maxFactorHeight
+                        factor = factor,
+                        height = maxFactorHeight
                     )
                 }
             }

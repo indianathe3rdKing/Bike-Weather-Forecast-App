@@ -33,7 +33,7 @@ val ScoreDangerous = Color(0xFFDC2626)      // Dark Red - Score < 20
 
 // ===== Additional UI Colors =====
 val CardBackground = Color(0xFF1E293B)      // Card background
-val CardBackgroundBest = Color(0xFF064E38)  // Best day card background
+val CardBackgroundBest = Color(0xFF163339)  // Best day card background
 val ProgressBackground = Color(0xFF475569)  // Progress indicator background
 val CyanAccent = Color(0xFF22CFFE)          // Cyan accent for highlights
 
