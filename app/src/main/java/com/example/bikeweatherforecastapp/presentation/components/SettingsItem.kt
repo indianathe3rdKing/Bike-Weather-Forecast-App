@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bikeweatherforecastapp.domain.model.Setting
 import com.example.bikeweatherforecastapp.ui.theme.CardBackground
 import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
 import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
@@ -138,26 +139,20 @@ fun SettingsToggleItem(
  */
 @Composable
 fun SettingsActionItem(
-    icon: ImageVector,
-    title: String,
-    subtitle: String? = null,
-    iconTint: Color = CyanAccent,
-    actionIcon: ImageVector? = null,
-    actionIconTint: Color = TextTertiary,
-    onClick: () -> Unit
+    setting: Setting
 ) {
     SettingsItem(
-        icon = icon,
-        title = title,
-        subtitle = subtitle,
-        iconTint = iconTint,
-        onClick = onClick,
-        trailing = if (actionIcon != null) {
+        icon = setting.icon,
+        title = setting.title,
+        subtitle = setting.subtitle,
+        iconTint = setting.iconTint,
+        onClick = setting.onClick,
+        trailing = if (setting.actionIcon != null) {
             {
                 Icon(
-                    imageVector = actionIcon,
+                    imageVector = setting.actionIcon,
                     contentDescription = null,
-                    tint = actionIconTint,
+                    tint = setting.actionIconTint,
                     modifier = Modifier.size(24.dp)
                 )
             }

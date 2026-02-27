@@ -53,19 +53,19 @@ fun BikeRidingCard(
     val scoreColor = getScoreColor(score.score)
     val weatherMetric = viewModel.isMetric.collectAsState().value
     val backgroundColor = if (isBest){
-        CardBackgroundBest.copy(0.3f)
+        CardBackgroundBest
     }else{
-        CardBackground.copy(0.8f)
+        CardBackground
     }
      lateinit var temperatureMax: String
      lateinit var temperatureMin: String
      if (weatherMetric){
-         temperatureMax= "${forecast.temperature.max.toInt()}°C"
-         temperatureMin= "${forecast.temperature.min.toInt()}°C"
+         temperatureMax= "${forecast.temperature.max.toInt()}°"
+         temperatureMin= "${forecast.temperature.min.toInt()}°"
 
      }else{
-         temperatureMax= "${Utils.toFahrenheit(forecast.temperature.max).toInt()}°F"
-         temperatureMin="${Utils.toFahrenheit(forecast.temperature.min).toInt()}°F"
+         temperatureMax= "${Utils.toFahrenheit(forecast.temperature.max).toInt()}°"
+         temperatureMin="${Utils.toFahrenheit(forecast.temperature.min).toInt()}°"
 
      }
 

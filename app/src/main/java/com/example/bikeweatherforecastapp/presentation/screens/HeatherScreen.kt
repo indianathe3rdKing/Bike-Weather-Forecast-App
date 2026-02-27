@@ -1,5 +1,6 @@
 package com.example.bikeweatherforecastapp.presentation.screens
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -39,15 +41,20 @@ fun HeaderSection(
 ){
     Card(
         colors= CardDefaults.cardColors(
-            containerColor = CardBackground.copy(alpha = 0.95f)
+            containerColor = CardBackground
         ),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .border(
+                1.dp,TextTertiary.copy(alpha = 0.5f),
+                RoundedCornerShape(16.dp)
+            ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 12.dp
         )
     ) {
         Column(
-            modifier = Modifier.padding(24.dp),
+            modifier = Modifier.padding(24.dp)
+               ,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(

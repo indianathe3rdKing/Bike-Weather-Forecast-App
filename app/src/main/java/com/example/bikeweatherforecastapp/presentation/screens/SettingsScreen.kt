@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bikeweatherforecastapp.data.local.DataStoreManager
+import com.example.bikeweatherforecastapp.domain.model.Setting
 import com.example.bikeweatherforecastapp.presentation.components.SettingsActionItem
 import com.example.bikeweatherforecastapp.presentation.components.SettingsToggleItem
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
@@ -52,7 +53,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
+fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
     // State for toggle settings
 
     val isMetricUnit = viewModel.isMetric.collectAsState().value
@@ -98,8 +99,8 @@ fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
             icon = Icons.Default.LocationOn,
             title = "Use Current Location",
             subtitle = if (useCurrentLocation) "Using device GPS location"
-                       else if (savedCity.isNotEmpty()) "Using: $savedCity"
-                       else "Search for a city to use",
+            else if (savedCity.isNotEmpty()) "Using: $savedCity"
+            else "Search for a city to use",
             checked = useCurrentLocation,
             onCheckedChange = { viewModel.updateUseCurrentLocation(it) }
         )
@@ -195,14 +196,15 @@ fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
         Spacer(modifier = Modifier.height(12.dp))
 
         SettingsActionItem(
-            icon = Icons.Default.Star,
-            title = "Remove Ads",
-            subtitle = "Enjoy an ad-free experience",
-            iconTint = Warning,
-            actionIcon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            onClick = {
-                // Handle remove ads action - navigate to purchase screen
-            }
+            Setting(
+                icon = Icons.Default.Star,
+                title = "Remove Ads",
+                subtitle = "Enjoy an ad-free experience",
+                iconTint = Warning,
+                actionIcon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                onClick = {
+                    // Handle remove ads action - navigate to purchase screen
+                })
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -213,11 +215,13 @@ fun SettingsScreen(viewModel: WeatherViewModel=koinViewModel()) {
         Spacer(modifier = Modifier.height(12.dp))
 
         SettingsActionItem(
-            icon = Icons.Default.Build,
-            title = "App Version",
-            subtitle = "1.0.0",
-            actionIcon = null,
-            onClick = { }
+            Setting(
+                icon = Icons.Default.Build,
+                title = "App Version",
+                subtitle = "1.0.0",
+                actionIcon = null,
+                onClick = { }
+            )
         )
 
         Spacer(modifier = Modifier.height(48.dp))
