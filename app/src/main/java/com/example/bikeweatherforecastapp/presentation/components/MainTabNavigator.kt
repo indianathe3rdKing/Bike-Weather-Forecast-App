@@ -1,5 +1,6 @@
 package com.example.bikeweatherforecastapp.presentation.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -7,9 +8,7 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import com.example.bikeweatherforecastapp.ui.icons.HeroIcons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -32,7 +31,11 @@ import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
 import com.example.bikeweatherforecastapp.presentation.screens.SettingsScreen
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import com.example.bikeweatherforecastapp.ui.theme.CardBackground
+import com.example.bikeweatherforecastapp.ui.theme.CardBackgroundBest
 import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
+import com.example.bikeweatherforecastapp.ui.theme.FactorBackground
+import com.example.bikeweatherforecastapp.ui.theme.Success
+import com.example.bikeweatherforecastapp.ui.theme.SuccessLight
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 
 @Composable
@@ -75,16 +78,23 @@ fun MainTabNavigator(
                     containerColor = NavColor,
                     tonalElevation = 2.dp,
                     modifier = Modifier.shadow(2.dp)
+                        .border(
+                            1.dp,
+                            TextTertiary.copy(0.5f),
+                            RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp,
+                                bottomStart = 0.dp,
+                                bottomEnd = 0.dp)
+                        )
                 ) {
                     TabNavigationItem(
                         title = "Home",
-                        icon = Icons.Default.Home,
+                        icon = HeroIcons.Home,
                         selected = selectedTabIndex == 0,
                         onClick = { selectedTabIndex = 0 }
                     )
                     TabNavigationItem(
                         title = "Settings",
-                        icon = Icons.Default.Settings,
+                        icon = HeroIcons.Cog6Tooth,
                         selected = selectedTabIndex == 1,
                         onClick = { selectedTabIndex = 1 }
                     )
@@ -112,11 +122,11 @@ private fun RowScope.TabNavigationItem(
         },
         label = { Text(title) },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = CyanAccent,
-            selectedTextColor = CyanAccent,
+            selectedIconColor = Success,
+            selectedTextColor = SuccessLight,
             unselectedIconColor = TextTertiary,
             unselectedTextColor = TextTertiary,
-            indicatorColor = CardBackground.copy(alpha = 0.5f)
+            indicatorColor = FactorBackground
         )
     )
 }

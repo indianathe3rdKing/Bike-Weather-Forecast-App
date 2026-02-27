@@ -24,6 +24,7 @@ import com.example.bikeweatherforecastapp.domain.model.BikeRidingFactor
 import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 
+import com.example.bikeweatherforecastapp.ui.theme.FactorBackground
 
 @Composable
 fun FactorItem(
@@ -32,7 +33,7 @@ fun FactorItem(
 ){
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = androidx.compose.ui.graphics.Color(0xFF334155).copy(0.6f)
+            containerColor = FactorBackground
         ),
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
