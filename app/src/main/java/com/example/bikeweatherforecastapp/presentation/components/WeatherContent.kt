@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,8 +32,9 @@ fun WeatherContent(
 
     val dailyScores by viewModel.dailyScores
     val bestDay = dailyScores.maxByOrNull { it.second.score }
-    val focusManager= LocalFocusManager.current
-    val keyboardController= LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val bestCardVisible = viewModel.bestCardVisibility.collectAsState().value
 
     BackHandler(enabled = true) {
         keyboardController?.hide()
@@ -45,16 +47,15 @@ fun WeatherContent(
             .padding(16.dp)
             .clickable(
                 indication = null,
-                interactionSource = remember{ MutableInteractionSource() }
-            ){
+                interactionSource = remember { MutableInteractionSource() }
+            ) {
                 focusManager.clearFocus()
-            }
-        ,
+            },
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
         SearchInput(viewModel)
-        HeaderSection(weatherData, bestDay?.first, bestDay?.second)
+        if (bestCardVisible) HeaderSection(weatherData, bestDay?.first, bestDay?.second)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -65,12 +66,11 @@ fun WeatherContent(
                 bottom = 124.dp
             )
         ) {
-            items(dailyScores){
-                (forecast,score) ->
+            items(dailyScores) { (forecast, score) ->
                 BikeRidingCard(
-                    forecast=forecast,
-                    score=score,
-                     isBest = bestDay?.first?.date == forecast.date
+                    forecast = forecast,
+                    score = score,
+                    isBest = bestDay?.first?.date == forecast.date
                 )
             }
         }

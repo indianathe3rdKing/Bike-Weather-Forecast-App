@@ -57,6 +57,13 @@ class WeatherViewModel(
             initialValue = dataStoreManager.getUseCurrentLocationSync()
         )
 
+    val bestCardVisibility=dataStoreManager.getBestCardVisibility
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = dataStoreManager.getBestCardVisibilitySync()
+        )
+
 
     //location
     private val fusedLocationClient: FusedLocationProviderClient = LocationServices
@@ -75,7 +82,11 @@ class WeatherViewModel(
         mutableStateOf<List<Pair<DailyForecast, BikeRidingScore>>>(emptyList())
     val dailyScores: State<List<Pair<DailyForecast, BikeRidingScore>>> = _dailyScores
 
-
+    fun updateBestCardVisibility(isVisible: Boolean){
+        viewModelScope.launch {
+            dataStoreManager.setBestCardVisibility(isVisible)
+        }
+    }
     fun updateMetric(metric: Boolean){
         viewModelScope.launch {
             dataStoreManager.setMetric(metric)

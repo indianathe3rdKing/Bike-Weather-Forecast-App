@@ -14,12 +14,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -29,28 +28,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.bikeweatherforecastapp.data.local.DataStoreManager
 import com.example.bikeweatherforecastapp.domain.model.Setting
 import com.example.bikeweatherforecastapp.presentation.components.SettingsActionItem
+import com.example.bikeweatherforecastapp.presentation.components.SettingsSectionHeader
 import com.example.bikeweatherforecastapp.presentation.components.SettingsToggleItem
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import com.example.bikeweatherforecastapp.ui.theme.CardBackground
 import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
 import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
-import com.example.bikeweatherforecastapp.ui.theme.TextSecondary
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 import com.example.bikeweatherforecastapp.ui.theme.Warning
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import com.example.bikeweatherforecastapp.presentation.components.UnitToggleButton
 
 @Composable
 fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
@@ -59,6 +54,7 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
     val isMetricUnit = viewModel.isMetric.collectAsState().value
     val useCurrentLocation = viewModel.useCurrentLocation.collectAsState().value
     val savedCity = viewModel.savedCity.collectAsState().value
+    val bestCardVisibility = viewModel.bestCardVisibility.collectAsState().value
     var notificationsEnabled by remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
@@ -103,6 +99,21 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
             else "Search for a city to use",
             checked = useCurrentLocation,
             onCheckedChange = { viewModel.updateUseCurrentLocation(it) }
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Best Card Section
+        SettingsSectionHeader(title = "Best Day Card")
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        SettingsToggleItem(
+            icon = Icons.Default.Create,
+            title = "Best Day Card",
+            subtitle = "Show the best day in the forecast",
+            checked = bestCardVisibility,
+            onCheckedChange = {viewModel.updateBestCardVisibility(it)}
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -227,43 +238,6 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
         Spacer(modifier = Modifier.height(48.dp))
     }
 }
-
-@Composable
-private fun SettingsSectionHeader(title: String) {
-    Text(
-        text = title,
-        color = CyanAccent,
-        fontSize = 14.sp,
-        fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.padding(start = 4.dp)
-    )
-}
-
-@Composable
-private fun UnitToggleButton(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier.height(44.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) CyanAccent else CardBackground,
-            contentColor = if (isSelected) Color.Black else TextSecondary
-        ),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Text(
-            text = text,
-            fontSize = 14.sp,
-            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
-        )
-    }
-}
-
-
 
 
 

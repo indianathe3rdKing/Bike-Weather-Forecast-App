@@ -19,6 +19,8 @@ class DataStoreManager(private val context: Context){
         val CITY_KEY = stringPreferencesKey("city")
         val METRIC_KEY = booleanPreferencesKey("metric")
         val USE_CURRENT_LOCATION_KEY = booleanPreferencesKey("use_current_location")
+        val BEST_CARD_KEY = booleanPreferencesKey("best_card")
+
     }
 
     //Save metric to data store
@@ -40,6 +42,18 @@ class DataStoreManager(private val context: Context){
         context.dataStoreManager.edit { prefs->
             prefs[CITY_KEY] = city
         }
+    }
+
+    //Set card visibility
+    suspend fun setBestCardVisibility(isVisible: Boolean) {
+        context.dataStoreManager.edit { prefs ->
+            prefs[BEST_CARD_KEY] = isVisible
+        }
+    }
+
+    //Get card visibility
+    val getBestCardVisibility: Flow<Boolean> = context.dataStoreManager.data.map {
+     prefs-> prefs[BEST_CARD_KEY] ?: true
     }
 
     //Get city from data store
@@ -69,6 +83,12 @@ class DataStoreManager(private val context: Context){
     fun getUseCurrentLocationSync(): Boolean = runBlocking {
         context.dataStoreManager.data.first()[USE_CURRENT_LOCATION_KEY] ?: true
     }
+
+    fun getBestCardVisibilitySync(): Boolean = runBlocking {
+        context.dataStoreManager.data.first()[BEST_CARD_KEY] ?: true
+    }
+
+
 
 
 }
