@@ -39,3 +39,6 @@ val FactorBackground = Color(0xFF334155).copy(0.6f)
 val ProgressBackground = Color(0xFF475569)  // Progress indicator background
 val CyanAccent = Color(0xFF22CFFE)          // Cyan accent for highlights
 
+val BorderColor = Color(0xFF10172C)          // Border color for elements
+
+

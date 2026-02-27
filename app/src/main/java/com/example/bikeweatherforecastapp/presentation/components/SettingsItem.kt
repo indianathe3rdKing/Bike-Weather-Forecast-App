@@ -1,5 +1,6 @@
 package com.example.bikeweatherforecastapp.presentation.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardDefaults.shape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -20,14 +22,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bikeweatherforecastapp.domain.model.Setting
+import com.example.bikeweatherforecastapp.ui.theme.BorderColor
 import com.example.bikeweatherforecastapp.ui.theme.CardBackground
 import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
+import com.example.bikeweatherforecastapp.ui.theme.Success
 import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 
@@ -46,19 +52,21 @@ fun SettingsItem(
     trailing: @Composable (() -> Unit)? = null
 ) {
     Card(
+        onClick={onClick ?: {}},
+        enabled = onClick != null,
         modifier = Modifier
             .fillMaxWidth()
-            .then(
-                if (onClick != null) {
-                    Modifier.clickable { onClick() }
-                } else {
-                    Modifier
-                }
-            ),
+            ,
         colors = CardDefaults.cardColors(
-            containerColor = CardBackground.copy(alpha = 0.6f)
+            containerColor = CardBackground,
+            disabledContainerColor = CardBackground
         ),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 12.dp
+            , disabledElevation = 12.dp
+        )
+        ,
     ) {
         Row(
             modifier = Modifier
@@ -110,7 +118,7 @@ fun SettingsToggleItem(
     icon: ImageVector,
     title: String,
     subtitle: String? = null,
-    iconTint: Color = CyanAccent,
+    iconTint: Color = Success,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
@@ -124,8 +132,8 @@ fun SettingsToggleItem(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = CyanAccent,
-                    checkedTrackColor = CyanAccent.copy(alpha = 0.3f),
+                    checkedThumbColor = Success,
+                    checkedTrackColor = Success.copy(alpha = 0.3f),
                     uncheckedThumbColor = TextTertiary,
                     uncheckedTrackColor = CardBackground
                 )

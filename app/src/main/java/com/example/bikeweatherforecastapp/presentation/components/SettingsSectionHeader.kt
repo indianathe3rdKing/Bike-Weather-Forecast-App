@@ -8,12 +8,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
+import com.example.bikeweatherforecastapp.ui.theme.SuccessLight
+import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 
 @Composable
 fun SettingsSectionHeader(title: String) {
     Text(
         text = title,
-        color = CyanAccent,
+        color = TextTertiary,
         fontSize = 14.sp,
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(start = 4.dp)

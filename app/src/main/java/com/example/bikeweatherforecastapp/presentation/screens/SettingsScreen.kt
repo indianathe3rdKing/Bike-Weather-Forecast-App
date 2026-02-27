@@ -40,12 +40,13 @@ import com.example.bikeweatherforecastapp.presentation.components.SettingsSectio
 import com.example.bikeweatherforecastapp.presentation.components.SettingsToggleItem
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import com.example.bikeweatherforecastapp.ui.theme.CardBackground
-import com.example.bikeweatherforecastapp.ui.theme.CyanAccent
 import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 import com.example.bikeweatherforecastapp.ui.theme.Warning
 import org.koin.androidx.compose.koinViewModel
 import com.example.bikeweatherforecastapp.presentation.components.UnitToggleButton
+import com.example.bikeweatherforecastapp.ui.theme.Success
+
 
 @Composable
 fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
@@ -63,7 +64,7 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 26.dp)
             .padding(bottom = 100.dp) // Extra padding for bottom navigation bar
     ) {
         Spacer(modifier = Modifier.height(16.dp))
@@ -125,11 +126,15 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
 
         // Unit Toggle Card with custom implementation for toggle buttons
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                ,
             colors = CardDefaults.cardColors(
-                containerColor = CardBackground.copy(alpha = 0.6f)
+                containerColor = CardBackground
             ),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 12.dp
+            )
         ) {
             Column(
                 modifier = Modifier
@@ -142,7 +147,7 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Units",
-                        tint = CyanAccent,
+                        tint = Success,
                         modifier = Modifier.padding(end = 16.dp)
                     )
                     Column {
@@ -229,6 +234,7 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
             Setting(
                 icon = Icons.Default.Build,
                 title = "App Version",
+                iconTint = Success,
                 subtitle = "1.0.0",
                 actionIcon = null,
                 onClick = { }
