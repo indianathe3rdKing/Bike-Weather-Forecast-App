@@ -37,14 +37,17 @@ import com.example.bikeweatherforecastapp.ui.theme.FactorBackground
 import com.example.bikeweatherforecastapp.ui.theme.Success
 import com.example.bikeweatherforecastapp.ui.theme.SuccessLight
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MainTabNavigator(
     weatherData: WeatherResponse,
-    viewModel: WeatherViewModel
+    viewModel: WeatherViewModel= koinViewModel()
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var NavColor= CardBackground.copy(0.9f)
+    val weatherState by viewModel.weatherState
+
     Scaffold(
         containerColor = Color.Transparent,
         content = { innerPadding ->
@@ -64,7 +67,7 @@ fun MainTabNavigator(
 
             ) {
                 when (selectedTabIndex) {
-                    0 -> WeatherContent(weatherData, viewModel)
+                    0 -> RefreshPullCircle( weatherState.isLoading,{viewModel.checkLocationPermission()} ,{WeatherContent(weatherData, viewModel)})
                     1 -> SettingsScreen()
                 }
             }

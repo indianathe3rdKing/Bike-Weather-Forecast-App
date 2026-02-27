@@ -92,6 +92,7 @@ fun WeatherScreen(
                 )
             }
             weatherState.weatherData != null ->{
+
                 MainTabNavigator(
                     weatherData = weatherState.weatherData!!,
                     viewModel = viewModel
