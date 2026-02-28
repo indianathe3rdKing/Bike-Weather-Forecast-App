@@ -11,8 +11,7 @@ data class WeatherResponse(
 
 data class HourlyForecast(
     val date: Long,
-    val time: String,
-    val temperature: Temperature,
+    val temperature: Double,
     val weather: List<Weather>,
     val humidity: Int,
     val windSpeed: Double,
@@ -87,6 +86,7 @@ data class Temperature(
 data class WeatherState(
     val isLoading: Boolean = false,
     val weatherData: WeatherResponse? = null,
+    val hourlyForecasts: List<HourlyForecast> = emptyList(),
     val error: String? = null,
     val isMetric: Boolean = true,
     val selectedDay: Boolean?=false

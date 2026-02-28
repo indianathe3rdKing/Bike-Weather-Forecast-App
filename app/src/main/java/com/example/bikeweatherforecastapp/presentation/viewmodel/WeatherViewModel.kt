@@ -18,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bikeweatherforecastapp.data.local.DataStoreManager
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingScore
 import com.example.bikeweatherforecastapp.domain.model.DailyForecast
+import com.example.bikeweatherforecastapp.domain.model.HourlyForecast
 import com.example.bikeweatherforecastapp.domain.model.Temperature
 import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
 import com.example.bikeweatherforecastapp.domain.model.WeatherState
@@ -190,6 +191,7 @@ class WeatherViewModel(
             getWeatherUseCase(latitude, longitude)
                 .onSuccess { response ->
                     val dailyForecast = processForestIntoDaily(response)
+                    val hourlyForecast = processForestIntoHourly(response)
                     val score = dailyForecast.map { forecast ->
                         forecast to calculateBikeRidingScoreUseCase(forecast)
                     }
@@ -197,6 +199,7 @@ class WeatherViewModel(
                     _weatherState.value = _weatherState.value.copy(
                         isLoading = false,
                         weatherData = response.copy(daily = dailyForecast),
+                        hourlyForecasts = hourlyForecast,
                         error = null
                     )
 
@@ -207,6 +210,28 @@ class WeatherViewModel(
                         error = "Failed to fetch weather data: ${exception.message}"
                     )
                 }
+        }
+    }
+
+    private fun processForestIntoHourly(response: WeatherResponse): List<HourlyForecast> {
+        // No grouping needed - each API item is already a 3-hour forecast
+        // Just map each item directly to an HourlyForecast
+        val timeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+
+        return response.list.take(12).map { forecastItem ->
+            val formattedTime = timeFormat.format(forecastItem.date * 1000)
+            Log.d(TAG, "Hourly: $formattedTime | Temp: ${forecastItem.main.temp}° | Weather: ${forecastItem.weather.firstOrNull()?.main} | Humidity: ${forecastItem.main.humidity}%")
+
+            HourlyForecast(
+                date = forecastItem.date,
+                temperature = forecastItem.main.temp,
+                weather = forecastItem.weather,
+                humidity = forecastItem.main.humidity,
+                windSpeed = forecastItem.wind.speed,
+                precipitationPredictability = forecastItem.precipitationPredictability
+            )
+        }.also {
+            Log.i(TAG, "Total hourly forecasts processed: ${it.size}")
         }
     }
 
@@ -223,14 +248,11 @@ class WeatherViewModel(
             if (singleDayForecast.isNotEmpty()) {
                 val firstForecast = singleDayForecast.first()
                 val maxTemp = singleDayForecast.maxOf { it.main.tempMax }
-                val minTemp = singleDayForecast.minOf {
-                    it.main.tempMin
-                }
+                val minTemp = singleDayForecast.minOf { it.main.tempMin }
                 val avgHumidity = singleDayForecast.map { it.main.humidity }.average().toInt()
                 val avgWindSpeed = singleDayForecast.map { it.wind.speed }.average()
-                val avgPrecipitation = singleDayForecast.map {
-                    it.precipitationPredictability
-                }.average()
+                val avgPrecipitation =
+                    singleDayForecast.map { it.precipitationPredictability }.average()
 
                 //Get the most common weather condition for the day
 
