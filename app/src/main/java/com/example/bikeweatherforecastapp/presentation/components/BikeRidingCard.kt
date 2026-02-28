@@ -1,6 +1,7 @@
 package com.example.bikeweatherforecastapp.presentation.components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,6 +53,7 @@ fun BikeRidingCard(
 ) {
     val scoreColor = getScoreColor(score.score)
     val weatherMetric = viewModel.isMetric.collectAsState().value
+    val weatherState by viewModel.weatherState
     val backgroundColor = if (isBest) {
         CardBackgroundBest
     } else {
@@ -69,12 +71,11 @@ fun BikeRidingCard(
 
     }
 
-
-
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         ),
+        onClick = {viewModel.updateSelectedDay(true)},
         modifier = Modifier
             .fillMaxWidth()
             .then(
@@ -82,12 +83,12 @@ fun BikeRidingCard(
                     3.dp, Success,
                     RoundedCornerShape(20.dp)
                 ) else Modifier
-            ),
+            )
+            ,
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor
         ),
         shape = RoundedCornerShape(20.dp),
-
 
         ) {
         Column(

@@ -41,4 +41,6 @@ val CyanAccent = Color(0xFF22CFFE)          // Cyan accent for highlights
 
 val BorderColor = Color(0xFF10172C)          // Border color for elements
 
-
+val DarkBlue=Color(0xFF0F172A) //Dark blue-ray
+val MediumBlue=Color(0xFF1E293B) //Medium blue-ray
+val LightBlue=Color(0xFF334155) //Light blue-ray

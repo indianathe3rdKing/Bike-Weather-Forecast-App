@@ -114,4 +114,7 @@ dependencies {
 
 // DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+// Navigator
+    implementation("cafe.adriel.voyager:voyager-navigator:${voyagerVersion}")
 }

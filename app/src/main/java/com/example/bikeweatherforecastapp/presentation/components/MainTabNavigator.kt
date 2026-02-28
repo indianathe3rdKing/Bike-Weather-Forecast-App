@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.bikeweatherforecastapp.domain.model.WeatherResponse
+import com.example.bikeweatherforecastapp.presentation.screens.HomeScreen
 import com.example.bikeweatherforecastapp.presentation.screens.SettingsScreen
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
 import com.example.bikeweatherforecastapp.ui.theme.CardBackground
@@ -63,11 +64,9 @@ fun MainTabNavigator(
                         bottom = 0.dp
                     )
                     .fillMaxSize()
-
-
             ) {
                 when (selectedTabIndex) {
-                    0 -> RefreshPullCircle( weatherState.isLoading,{viewModel.checkLocationPermission()} ,{WeatherContent(weatherData, viewModel)})
+                    0 -> RefreshPullCircle( weatherState.isLoading,{viewModel.checkLocationPermission()} ,{ HomeScreen(weatherData,viewModel) })
                     1 -> SettingsScreen()
                 }
             }

@@ -18,6 +18,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.example.bikeweatherforecastapp.presentation.components.MainTabNavigator
 import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewModel
+import com.example.bikeweatherforecastapp.ui.theme.DarkBlue
+import com.example.bikeweatherforecastapp.ui.theme.LightBlue
+import com.example.bikeweatherforecastapp.ui.theme.MediumBlue
 import org.koin.androidx.compose.koinViewModel
 @Composable
 fun WeatherScreen(
@@ -72,9 +75,9 @@ fun WeatherScreen(
             .background(
                 Brush.verticalGradient(
                     colors= listOf(
-                        Color(0xFF0F172A), //Dark blue-ray
-                        Color(0xFF1E293B), //Medium blue-ray
-                        Color(0xFF334155) //Light blue-ray
+                        DarkBlue,
+                        MediumBlue,
+                        LightBlue
                     )
                 )
             )

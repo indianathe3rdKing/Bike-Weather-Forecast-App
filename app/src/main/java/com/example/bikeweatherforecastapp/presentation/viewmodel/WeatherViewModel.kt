@@ -57,7 +57,7 @@ class WeatherViewModel(
             initialValue = dataStoreManager.getUseCurrentLocationSync()
         )
 
-    val bestCardVisibility=dataStoreManager.getBestCardVisibility
+    val bestCardVisibility = dataStoreManager.getBestCardVisibility
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
@@ -82,12 +82,23 @@ class WeatherViewModel(
         mutableStateOf<List<Pair<DailyForecast, BikeRidingScore>>>(emptyList())
     val dailyScores: State<List<Pair<DailyForecast, BikeRidingScore>>> = _dailyScores
 
-    fun updateBestCardVisibility(isVisible: Boolean){
+    fun updateSelectedDay(selectedDay: Boolean) {
+        viewModelScope.launch {
+
+            _weatherState.value = _weatherState.value.copy(
+                selectedDay = selectedDay
+            )
+            Log.i(TAG, "updateSelectedDay: $selectedDay")
+        }
+    }
+
+    fun updateBestCardVisibility(isVisible: Boolean) {
         viewModelScope.launch {
             dataStoreManager.setBestCardVisibility(isVisible)
         }
     }
-    fun updateMetric(metric: Boolean){
+
+    fun updateMetric(metric: Boolean) {
         viewModelScope.launch {
             dataStoreManager.setMetric(metric)
         }
@@ -108,6 +119,7 @@ class WeatherViewModel(
             }
         }
     }
+
     fun checkLocationPermission() {
         val context = getApplication<Application>()
         val hasPermission = ContextCompat.checkSelfPermission(
@@ -119,15 +131,15 @@ class WeatherViewModel(
         if (hasPermission) getCurrentLocation()
     }
 
-    fun searchCity(city: String){
+    fun searchCity(city: String) {
         Log.d(TAG, "searchCity called with: $city")
         viewModelScope.launch {
-            val coordinates= searchCityUseCase(city)
+            val coordinates = searchCityUseCase(city)
             Log.d(TAG, "searchCity result: $coordinates")
 
             coordinates?.let {
-                Log.i(TAG,"Coordinates: ${it.lat}, ${it.lon}")
-                fetchWeatherData(it.lat,it.lon)
+                Log.i(TAG, "Coordinates: ${it.lat}, ${it.lon}")
+                fetchWeatherData(it.lat, it.lon)
                 dataStoreManager.setCity(city)
                 // Turn off "Use Current Location" when user manually searches for a city
                 dataStoreManager.setUseCurrentLocation(false)
@@ -216,7 +228,8 @@ class WeatherViewModel(
                 }
                 val avgHumidity = singleDayForecast.map { it.main.humidity }.average().toInt()
                 val avgWindSpeed = singleDayForecast.map { it.wind.speed }.average()
-                val avgPrecipitation = singleDayForecast.map { it.precipitationPredictability
+                val avgPrecipitation = singleDayForecast.map {
+                    it.precipitationPredictability
                 }.average()
 
                 //Get the most common weather condition for the day
@@ -225,17 +238,17 @@ class WeatherViewModel(
                     .flatMap { it.weather }
                     .groupBy { it.main }
                     .maxByOrNull { it.value.size }
-                    ?.value?.first()?: firstForecast.weather.first()
+                    ?.value?.first() ?: firstForecast.weather.first()
 
-                val dailyForecast= DailyForecast(
-                    date= firstForecast.date,
+                val dailyForecast = DailyForecast(
+                    date = firstForecast.date,
                     temperature = Temperature(
                         day = firstForecast.main.temp,
                         min = minTemp,
                         max = maxTemp,
                         night = firstForecast.main.temp
                     ),
-                    weather=listOf(mostCommonWeather),
+                    weather = listOf(mostCommonWeather),
                     humidity = avgHumidity,
                     windSpeed = avgWindSpeed,
                     precipitationPredictability = avgPrecipitation
@@ -247,8 +260,6 @@ class WeatherViewModel(
     }
 
 
-
-
 }
 
-private const val TAG= "WeatherViewModel"
+private const val TAG = "WeatherViewModel"

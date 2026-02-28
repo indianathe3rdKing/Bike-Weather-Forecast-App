@@ -9,6 +9,15 @@ data class WeatherResponse(
     val daily: List<DailyForecast> = emptyList()
 )
 
+data class HourlyForecast(
+    val date: Long,
+    val time: String,
+    val temperature: Temperature,
+    val weather: List<Weather>,
+    val humidity: Int,
+    val windSpeed: Double,
+    val precipitationPredictability: Double
+)
 data class GeoResponse(
     val name: String,
     val lat: Double,
@@ -79,6 +88,7 @@ data class WeatherState(
     val isLoading: Boolean = false,
     val weatherData: WeatherResponse? = null,
     val error: String? = null,
-    val isMetric: Boolean = true
+    val isMetric: Boolean = true,
+    val selectedDay: Boolean?=false
 )
 
