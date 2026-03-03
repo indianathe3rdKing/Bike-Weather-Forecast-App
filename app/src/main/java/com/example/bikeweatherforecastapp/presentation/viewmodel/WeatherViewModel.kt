@@ -26,8 +26,8 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.time.Instant
+import java.time.ZoneId
 
 class WeatherViewModel(
     application: Application,
@@ -86,12 +86,65 @@ class WeatherViewModel(
     val hourlyScores: State<List<Pair<Forecast, BikeRidingScore>>> = _hourlyScores
     fun updateSelectedDay(selectedDay: Boolean) {
         viewModelScope.launch {
-
             _weatherState.value = _weatherState.value.copy(
                 selectedDay = selectedDay
             )
             Log.i(TAG, "updateSelectedDay: $selectedDay")
         }
+    }
+
+    fun setSelectedDayDate(date: Long) {
+        viewModelScope.launch {
+            // Get the full weather response
+            val weatherData = _weatherState.value.weatherData
+
+            if (weatherData == null) {
+                Log.e(TAG, "No weather data available")
+                return@launch
+            }
+
+            // Filter hourly forecasts from the raw API data for the specific day
+            val hourlyForecastsForDay = getHourlyForecastsForDay(weatherData.list, date)
+
+            Log.i(TAG, "Selected date (epoch): $date")
+            Log.i(TAG, "Filtered ${hourlyForecastsForDay.size} hourly forecasts for selected day")
+
+            // Calculate scores for filtered hourly forecasts
+            val hourlyScoresForDay = hourlyForecastsForDay.map { forecast ->
+                forecast to calculateBikeRidingScoreUseCase(forecast, showNumericValues = true)
+            }
+
+            _hourlyScores.value = hourlyScoresForDay
+            _weatherState.value = _weatherState.value.copy(
+                selectedDay = true
+            )
+        }
+    }
+
+    /**
+     * Get hourly forecasts for a specific day from the raw API weather items
+     */
+    private fun getHourlyForecastsForDay(weatherItems: List<WeatherItem>, targetDate: Long): List<Forecast> {
+        return weatherItems
+            .filter { item ->
+                isSameDay(item.date, targetDate)
+            }
+            .map { item ->
+                Forecast(
+                    date = item.date,
+                    temperature = Temperature(
+                        min = item.main.temp,
+                        max = item.main.temp
+                    ),
+                    weather = item.weather,
+                    humidity = item.main.humidity,
+                    windSpeed = item.wind.speed,
+                    precipitationPredictability = item.precipitationPredictability
+                )
+            }
+            .also {
+                Log.i(TAG, "Created ${it.size} hourly forecasts for day with epoch $targetDate")
+            }
     }
 
     fun updateBestCardVisibility(isVisible: Boolean) {
@@ -209,18 +262,13 @@ class WeatherViewModel(
                     // Open-Meteo already provides daily forecasts directly
                     val dailyForecast = response.daily.take(7)
 
-                    // Get hourly forecasts from the list (already processed by mapper)
-                    val hourlyForecast = processHourlyForecasts(response.list)
-
+                    // Calculate scores for daily forecasts
                     val score = dailyForecast.map { forecast ->
                         forecast to calculateBikeRidingScoreUseCase(forecast, showNumericValues = false)
                     }
 
-                    val hourlyScore = hourlyForecast.map { forecast ->
-                        forecast to calculateBikeRidingScoreUseCase(forecast, showNumericValues = true)
-                    }
                     _dailyScores.value = score
-                    _hourlyScores.value = hourlyScore
+                    _hourlyScores.value = emptyList()
 
                     // Update city name and country in response
                     val updatedResponse = response.copy(
@@ -233,12 +281,12 @@ class WeatherViewModel(
                     _weatherState.value = _weatherState.value.copy(
                         isLoading = false,
                         weatherData = updatedResponse,
-                        hourlyForecasts = hourlyForecast,
+                        hourlyForecasts = emptyList(), // We'll create these on-demand when a day is selected
                         error = null
                     )
 
                     Log.i(TAG, "Weather data fetched successfully for $cityName, $country")
-                    Log.i(TAG, "Daily forecasts: ${dailyForecast.size}, Hourly forecasts: ${hourlyForecast.size}")
+                    Log.i(TAG, "Daily forecasts: ${dailyForecast.size}, Hourly items in API response: ${response.list.size}")
                 }
                 .onFailure { exception ->
                     Log.e(TAG, "Failed to fetch weather data", exception)
@@ -250,25 +298,13 @@ class WeatherViewModel(
         }
     }
 
-    private fun processHourlyForecasts(weatherItems: List<WeatherItem>): List<Forecast> {
-       val formatTime = SimpleDateFormat("HH:mm", Locale.getDefault())
-        // Take next 24 hours of forecasts
-        return weatherItems.take(24).map { item ->
-            val formattedTime = formatTime.format(item.date*1000)
-            Forecast(
-                date = item.date,
-                temperature = Temperature(
-                    min = item.main.temp,
-                    max = item.main.temp
-                ),
-                weather = item.weather,
-                humidity = item.main.humidity,
-                windSpeed = item.wind.speed,
-                precipitationPredictability = item.precipitationPredictability
-            )
-        }.also {
-            Log.i(TAG, "Processed ${it.size} hourly forecasts")
-        }
+    fun isSameDay(epoch1: Long, epoch2: Long): Boolean {
+        val zone = ZoneId.systemDefault()
+
+        val date1 = Instant.ofEpochSecond(epoch1).atZone(zone).toLocalDate()
+        val date2 = Instant.ofEpochSecond(epoch2).atZone(zone).toLocalDate()
+
+        return date1 == date2
     }
 
 

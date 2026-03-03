@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -30,8 +30,14 @@ import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 
 
 @Composable
-fun HourlyCard( forecast: Forecast,score: BikeRidingScore) {
-
+fun HourlyCard(
+    forecast: Forecast,
+    score: BikeRidingScore,
+    hourlyForecasts: List<Forecast>,
+    selectedIndex: Int,
+    isMetric: Boolean = true,
+    onHourSelected: (Int) -> Unit = {}
+) {
     val scoreColor = getScoreColor(score.score)
 
     Card(
@@ -52,7 +58,7 @@ fun HourlyCard( forecast: Forecast,score: BikeRidingScore) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    Utils.formatTime(forecast.date), fontSize = 18.sp,
+                    Utils.formatDate(forecast.date), fontSize = 18.sp,
                     color = TextPrimary,
                     fontWeight = FontWeight.Bold
                 )
@@ -108,7 +114,21 @@ fun HourlyCard( forecast: Forecast,score: BikeRidingScore) {
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-
+            // Hourly items LazyRow - clicking changes the displayed HourlyCard
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            ) {
+                itemsIndexed(hourlyForecasts) { index, hourForecast ->
+                    HourlyItem(
+                        forecast = hourForecast,
+                        isMetric = isMetric,
+                        isSelected = index == selectedIndex,
+                        onClick = { onHourSelected(index) }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

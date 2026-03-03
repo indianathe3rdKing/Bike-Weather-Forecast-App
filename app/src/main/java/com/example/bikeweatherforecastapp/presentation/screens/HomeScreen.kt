@@ -11,7 +11,7 @@ import com.example.bikeweatherforecastapp.presentation.viewmodel.WeatherViewMode
 fun HomeScreen(weatherData: WeatherResponse, viewModel: WeatherViewModel) {
     val state by viewModel.weatherState
 
-    if (state.selectedDay!!) {
+    if (state.selectedDay == true) {
       DailyCastScreen(viewModel)
     }else{
         WeatherContent(weatherData, viewModel)

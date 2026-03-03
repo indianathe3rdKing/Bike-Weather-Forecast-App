@@ -36,6 +36,9 @@ fun WeatherContent(
     val keyboardController = LocalSoftwareKeyboardController.current
     val bestCardVisible = viewModel.bestCardVisibility.collectAsState().value
 
+
+
+
     BackHandler(enabled = true) {
         keyboardController?.hide()
         focusManager.clearFocus()
@@ -70,7 +73,10 @@ fun WeatherContent(
                 BikeRidingCard(
                     forecast = forecast,
                     score = score,
-                    isBest = bestDay?.first?.date == forecast.date
+                    isBest = bestDay?.first?.date == forecast.date,
+                    onClick = { selectedDate ->
+                        viewModel.setSelectedDayDate(selectedDate)
+                    }
                 )
             }
         }

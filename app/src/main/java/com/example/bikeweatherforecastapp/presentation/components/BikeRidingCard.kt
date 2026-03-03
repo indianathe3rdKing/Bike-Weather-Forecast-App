@@ -18,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,10 +44,12 @@ import org.koin.androidx.compose.koinViewModel
 fun BikeRidingCard(
     forecast: Forecast,
     score: BikeRidingScore,
-
+    onClick: (Long) -> Unit = {},
     isBest: Boolean,
-    viewModel: WeatherViewModel = koinViewModel()
+    viewModel: WeatherViewModel = koinViewModel(),
+
 ) {
+
     val scoreColor = getScoreColor(score.score)
     val weatherMetric = viewModel.isMetric.collectAsState().value
     val backgroundColor = if (isBest) {
@@ -70,7 +73,7 @@ fun BikeRidingCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp
         ),
-        onClick = {viewModel.updateSelectedDay(true)},
+        onClick = { onClick(forecast.date) },
         modifier = Modifier
             .fillMaxWidth()
             .then(

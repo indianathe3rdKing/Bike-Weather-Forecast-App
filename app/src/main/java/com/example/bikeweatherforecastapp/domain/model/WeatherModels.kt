@@ -87,6 +87,6 @@ data class WeatherState(
     val hourlyForecasts: List<Forecast> = emptyList(),
     val error: String? = null,
     val isMetric: Boolean = true,
-    val selectedDay: Boolean?=false
+    val selectedDay: Boolean?=null
 )
 
