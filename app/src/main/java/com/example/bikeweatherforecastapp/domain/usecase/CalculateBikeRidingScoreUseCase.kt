@@ -161,8 +161,8 @@ private fun getOverallRating(score: Int): String {
     return when {
         score >= 85 -> "Perfect for cycling! 🚴🏻"
         score >= 70 -> "Great conditions for cycling! 🚴🏻"
-        score >= 50 -> "Moderate conditions be cautious!⚠️"
-        score >= 30 -> "Challenging conditions!🚫"
+        score >= 50 -> "Moderate conditions be cautious! ⚠️"
+        score >= 30 -> "Challenging conditions! 🚫"
         else -> "Dangerous conditions! 💀"
     }
 }

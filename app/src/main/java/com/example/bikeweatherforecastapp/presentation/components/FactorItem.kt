@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingFactor
+import com.example.bikeweatherforecastapp.ui.theme.CardBackground
 import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
 
@@ -30,10 +32,11 @@ import com.example.bikeweatherforecastapp.ui.theme.FactorBackground
 fun FactorItem(
     factor: BikeRidingFactor,
     height: Dp
+    ,backgroundColor: Color =FactorBackground
 ){
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = FactorBackground
+            containerColor = backgroundColor
         ),
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier

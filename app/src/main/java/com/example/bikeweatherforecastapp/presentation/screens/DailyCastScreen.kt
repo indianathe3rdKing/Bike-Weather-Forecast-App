@@ -29,7 +29,6 @@ import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 fun DailyCastScreen(viewModel: WeatherViewModel) {
 
     val hourlyScores by viewModel.hourlyScores
-    val weatherState by viewModel.weatherState
     val isMetric by viewModel.isMetric.collectAsState()
 
     // State for selected hour index
@@ -42,6 +41,7 @@ fun DailyCastScreen(viewModel: WeatherViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+
             .background(
                 Brush.verticalGradient(
                     colors = listOf(
@@ -51,7 +51,7 @@ fun DailyCastScreen(viewModel: WeatherViewModel) {
                     )
                 )
             )
-            .verticalScroll(rememberScrollState()),
+
     ) {
         if (hourlyScores.isEmpty()) {
             Text(

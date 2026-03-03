@@ -119,7 +119,7 @@ fun BikeRidingCard(
 
                 //Circular progress bar
                 CircularProgressBar(
-                    score = score.score, color = scoreColor,
+                    score = score.score, strokeWidth = 6,color = scoreColor,
                     modifier = Modifier.size(60.dp)
                 )
             }

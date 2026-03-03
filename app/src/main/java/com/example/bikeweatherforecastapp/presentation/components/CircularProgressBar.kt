@@ -4,10 +4,12 @@ package com.example.bikeweatherforecastapp.presentation.components
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -20,41 +22,41 @@ import com.example.bikeweatherforecastapp.ui.theme.ProgressBackground
 
 @Composable
 fun CircularProgressBar(
-    score:Int, color: Color,
-    modifier: Modifier= Modifier
-){
+    score: Int, strokeWidth: Int, color: Color,
+    modifier: Modifier = Modifier, fontSize: Int = 14
+) {
     Box(
-        modifier=modifier,
-        contentAlignment = Alignment.Center
-    ){
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+    ) {
         Canvas(
-            modifier= Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
-            val strokeWidth=6.dp.toPx()
-            val radius=(size.minDimension-strokeWidth)/2
+            val strokeWidth = strokeWidth.dp.toPx()
+            val radius = (size.minDimension - strokeWidth) / 2
 
             //Background circle
             drawCircle(
-                color=ProgressBackground,
-                radius=radius,
-                style= Stroke(width=strokeWidth)
+                color = ProgressBackground,
+                radius = radius,
+                style = Stroke(width = strokeWidth)
             )
 
             //Progress circle
-            val sweepAngle = (score/100f)*360f
+            val sweepAngle = (score / 100f) * 360f
             drawArc(
-                color=color,
+                color = color,
                 startAngle = -90f,
-                sweepAngle=sweepAngle,
+                sweepAngle = sweepAngle,
                 useCenter = false,
-                style= Stroke(width=strokeWidth, cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
         }
 
         Text(
             text = "$score%",
-            color= TextPrimary,
-            fontSize=14.sp,
+            color = TextPrimary,
+            fontSize = fontSize.sp,
             fontWeight = FontWeight.Bold
         )
     }

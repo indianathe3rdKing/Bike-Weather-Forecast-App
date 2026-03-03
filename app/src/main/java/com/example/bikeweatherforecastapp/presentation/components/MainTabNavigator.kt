@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.bikeweatherforecastapp.ui.icons.HeroIcons
@@ -87,6 +88,8 @@ fun MainTabNavigator(
                                 bottomStart = 0.dp,
                                 bottomEnd = 0.dp)
                         )
+
+
                 ) {
                     TabNavigationItem(
                         title = "Home",
