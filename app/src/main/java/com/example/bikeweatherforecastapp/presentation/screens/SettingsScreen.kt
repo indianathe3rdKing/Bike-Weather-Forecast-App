@@ -1,5 +1,9 @@
 package com.example.bikeweatherforecastapp.presentation.screens
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +28,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.example.bikeweatherforecastapp.domain.model.Setting
 import com.example.bikeweatherforecastapp.presentation.components.SettingsActionItem
 import com.example.bikeweatherforecastapp.presentation.components.SettingsSectionHeader
@@ -46,6 +52,7 @@ import com.example.bikeweatherforecastapp.ui.theme.Warning
 import org.koin.androidx.compose.koinViewModel
 import com.example.bikeweatherforecastapp.presentation.components.UnitToggleButton
 import com.example.bikeweatherforecastapp.ui.theme.Success
+import kotlin.contracts.contract
 
 
 @Composable
@@ -56,9 +63,21 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
     val useCurrentLocation = viewModel.useCurrentLocation.collectAsState().value
     val savedCity = viewModel.savedCity.collectAsState().value
     val bestCardVisibility = viewModel.bestCardVisibility.collectAsState().value
-    var notificationsEnabled by remember { mutableStateOf(false) }
+    var notificationsEnabled = viewModel.toggleNotification.collectAsState().value
 
     val scrollState = rememberScrollState()
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract= ActivityResultContracts.RequestPermission()
+    ) {
+        granted ->
+        if(granted){
+            notificationsEnabled=true
+            viewModel.enableNotifications()
+        }else{
+            notificationsEnabled=false
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -201,7 +220,28 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
             title = "Daily Forecast Alerts",
             subtitle = "Get notified about best riding conditions",
             checked = notificationsEnabled,
-            onCheckedChange = { notificationsEnabled = it }
+            onCheckedChange = { enabled->
+
+                if (enabled){
+                    if(
+                        ContextCompat.checkSelfPermission(
+                            viewModel.getApplication(),
+                            Manifest.permission.POST_NOTIFICATIONS
+                        )== PackageManager.PERMISSION_GRANTED
+                    ){
+                        viewModel.updateNotificationToggle(true)
+                        viewModel.enableNotifications()
+                    }else{
+                        notificationPermissionLauncher.launch(
+                            Manifest.permission.POST_NOTIFICATIONS
+                        )
+
+                    }
+                }else{
+                    viewModel.updateNotificationToggle(false)
+                    viewModel.disableNotifications()
+                }
+            }
         )
 
         Spacer(modifier = Modifier.height(24.dp))

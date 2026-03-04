@@ -11,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,7 +59,14 @@ fun CircularProgressBar(
             text = "$score%",
             color = TextPrimary,
             fontSize = fontSize.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            style= TextStyle(
+                shadow = Shadow(
+                    color = TextPrimary.copy(0.6f),
+                    offset = androidx.compose.ui.geometry.Offset(0f, 0f),
+                    blurRadius = 10f
+                )
+            )
         )
     }
 }

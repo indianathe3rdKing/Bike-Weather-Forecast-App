@@ -2,6 +2,8 @@ package com.example.bikeweatherforecastapp.presentation.viewmodel
 
 import android.Manifest
 import android.app.Application
+import android.app.NotificationManager
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
@@ -15,7 +17,12 @@ import com.google.android.gms.location.LocationServices
 import androidx.compose.runtime.State
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.bikeweatherforecastapp.data.local.DataStoreManager
+import com.example.bikeweatherforecastapp.data.services.notifications.NotificationHelper
+import com.example.bikeweatherforecastapp.data.services.notifications.NotificationWorker
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingScore
 import com.example.bikeweatherforecastapp.domain.model.Forecast
 import com.example.bikeweatherforecastapp.domain.model.Temperature
@@ -28,6 +35,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
+import java.util.concurrent.TimeUnit
 
 class WeatherViewModel(
     application: Application,
@@ -55,6 +63,13 @@ class WeatherViewModel(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
             initialValue = dataStoreManager.getUseCurrentLocationSync()
+        )
+
+    val toggleNotification = dataStoreManager.notificationToggle
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = dataStoreManager.getNotificationSync()
         )
 
     val bestCardVisibility = dataStoreManager.getBestCardVisibility
@@ -159,6 +174,12 @@ class WeatherViewModel(
         }
     }
 
+    fun updateNotificationToggle(toggle: Boolean){
+        viewModelScope.launch {
+            dataStoreManager.setNotificationToggle(toggle)
+        }
+    }
+
     fun updateUseCurrentLocation(useCurrentLocation: Boolean) {
         viewModelScope.launch {
             dataStoreManager.setUseCurrentLocation(useCurrentLocation)
@@ -211,6 +232,24 @@ class WeatherViewModel(
                 )
             }
         }
+    }
+
+    fun enableNotifications(){
+        val request = PeriodicWorkRequestBuilder<NotificationWorker>(
+            15, TimeUnit.MINUTES
+        ).build()
+
+        WorkManager.getInstance(getApplication()).enqueueUniquePeriodicWork("daily_notification",
+            ExistingPeriodicWorkPolicy.UPDATE,request)
+    }
+
+    fun disableNotifications(){
+        val context = getApplication<Application>()
+        WorkManager.getInstance(getApplication())
+            .cancelUniqueWork("daily_notification")
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(1)
     }
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])

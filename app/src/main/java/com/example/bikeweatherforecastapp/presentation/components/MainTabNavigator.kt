@@ -47,7 +47,7 @@ fun MainTabNavigator(
     viewModel: WeatherViewModel= koinViewModel()
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    var NavColor= CardBackground.copy(0.9f)
+    val navColor = CardBackground.copy(0.9f)
     val weatherState by viewModel.weatherState
 
     Scaffold(
@@ -78,7 +78,7 @@ fun MainTabNavigator(
                 color = CardBackground
             ) {
                 NavigationBar(
-                    containerColor = NavColor,
+                    containerColor = navColor,
                     tonalElevation = 2.dp,
                     modifier = Modifier.shadow(2.dp)
                         .border(
