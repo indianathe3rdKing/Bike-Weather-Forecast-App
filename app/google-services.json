@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1092374320814",
+    "project_id": "bike-cast",
+    "storage_bucket": "bike-cast.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092374320814:android:e71a521ecda59e10f6ff3f",
+        "android_client_info": {
+          "package_name": "com.example.bikeweatherforecastapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoGtGWkXYr5_d-D8qQF1zuCM4gTH9ZRUA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

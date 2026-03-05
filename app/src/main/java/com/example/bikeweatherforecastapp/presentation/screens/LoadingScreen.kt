@@ -9,16 +9,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.bikeweatherforecastapp.R
 import com.example.bikeweatherforecastapp.ui.theme.Success
 import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 
 @Composable
 fun LoadingScreen(){
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.cycle))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
     Box(
         Modifier.fillMaxSize(),
         contentAlignment= Alignment.Center
@@ -26,10 +38,12 @@ fun LoadingScreen(){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularProgressIndicator(
-                color= Success,
-                modifier = Modifier.size(48.dp),
-                strokeWidth = 4.dp
+
+            LottieAnimation(
+                modifier = Modifier.size(400.dp),
+                composition=composition,
+                progress = progress
+
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(

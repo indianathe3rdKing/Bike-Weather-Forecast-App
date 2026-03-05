@@ -47,7 +47,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources=true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -120,4 +121,10 @@ dependencies {
 
 // Navigator
     implementation("cafe.adriel.voyager:voyager-navigator:${voyagerVersion}")
+
+    //Lottie
+    implementation("com.airbnb.android:lottie-compose:6.0.0")
+
+    //SplashScreen
+    implementation("androidx.core:core-splashscreen:1.0.0-beta02")
 }

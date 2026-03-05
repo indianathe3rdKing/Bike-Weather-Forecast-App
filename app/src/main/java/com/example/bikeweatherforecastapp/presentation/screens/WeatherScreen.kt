@@ -83,9 +83,9 @@ fun WeatherScreen(
             )
     ){
         when{
-            weatherState.isLoading && weatherState.weatherData==null->{
-                LoadingScreen()
-            }
+//            weatherState.isLoading && weatherState.weatherData==null->{
+//                WelcomeScreen()
+//            }
             weatherState.error !=null ->{
                 ErrorScreen(
                     error=weatherState.error!!,
@@ -102,7 +102,7 @@ fun WeatherScreen(
                 )
             }
             else ->{
-                WelcomeScreen()
+                LoadingScreen()
             }
         }
     }

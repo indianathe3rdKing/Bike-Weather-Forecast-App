@@ -1,5 +1,9 @@
 package com.example.bikeweatherforecastapp.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,7 +32,11 @@ import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -41,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.rotationMatrix
 import com.example.bikeweatherforecastapp.R
 import com.example.bikeweatherforecastapp.domain.model.BikeRidingScore
 import com.example.bikeweatherforecastapp.domain.model.Forecast
@@ -51,6 +60,7 @@ import com.example.bikeweatherforecastapp.ui.theme.CardBackground
 import com.example.bikeweatherforecastapp.ui.theme.FactorBackground
 import com.example.bikeweatherforecastapp.ui.theme.TextPrimary
 import com.example.bikeweatherforecastapp.ui.theme.TextTertiary
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -65,6 +75,21 @@ fun HourlyCard(
     viewModel: WeatherViewModel = koinViewModel()
 ) {
     val scoreColor = getScoreColor(score.score)
+    var visible by remember { mutableStateOf(false) }
+    var animate by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        visible = true
+    }
+
+    // Reset and trigger animation whenever the forecast changes (hourly card clicked)
+    LaunchedEffect(forecast.date, selectedIndex) {
+        animate = false
+        delay(50) // Small delay to ensure reset
+        animate = true
+    }
+
+
 
     Box(
         modifier = Modifier
@@ -82,28 +107,35 @@ fun HourlyCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Card(
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 12.dp
-                    ),
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clickable { viewModel.updateSelectedDay(false) },
-                    colors = CardDefaults.cardColors(
-                        containerColor = CardBackground
-                    ),
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize()
+                AnimatedVisibility(
+                    visible = visible,
+                    enter = fadeIn()+ slideInVertically(initialOffsetY = {50})
+                    + slideInHorizontally(initialOffsetX = {-50}),
 
+                ) {
+                    Card(
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 12.dp
+                        ),
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clickable { viewModel.updateSelectedDay(false) },
+                        colors = CardDefaults.cardColors(
+                            containerColor = CardBackground
+                        ),
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.back_black),
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp),
-                            tint = TextTertiary
-                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize()
+
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.back_black),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = TextTertiary
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.width(8.dp))
@@ -207,7 +239,7 @@ fun HourlyCard(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
                     items(score.factors) { item ->
-                        FactorItem(item, maxFactorHeight, CardBackground)
+                        FactorItem(item, maxFactorHeight,CardBackground,viewModel=viewModel)
                     }
                 }
 

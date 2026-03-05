@@ -33,6 +33,7 @@ import com.google.android.gms.location.Priority
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.time.Instant
 import java.time.ZoneId
 import java.util.concurrent.TimeUnit
@@ -332,9 +333,18 @@ class WeatherViewModel(
                 }
                 .onFailure { exception ->
                     Log.e(TAG, "Failed to fetch weather data", exception)
+                    val errorCode =(exception as? HttpException)?.code()
+                    val message = when(errorCode){
+                        400 -> "Bad Request"
+                        401 -> "Unauthorized"
+                        404 -> "Not Found"
+                        429->"Too many requests. Try again later."
+                        500-> "Weather sevrice unavailable"
+                        else -> "Unknown Error"
+                    }
                     _weatherState.value = _weatherState.value.copy(
                         isLoading = false,
-                        error = "Failed to fetch weather data: ${exception.message}"
+                        error = "Failed to fetch weather data: ${message}"
                     )
                 }
         }

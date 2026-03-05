@@ -179,7 +179,8 @@ fun BikeRidingCard(
                 items(score.factors) { factor ->
                     FactorItem(
                         factor = factor,
-                        height = maxFactorHeight
+                        height = maxFactorHeight,
+                        viewModel=viewModel
                     )
                 }
             }
