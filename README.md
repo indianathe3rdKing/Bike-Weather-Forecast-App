@@ -11,6 +11,25 @@ A modern Android weather application designed specifically for cyclists, providi
 
 Bike Weather Forecast App helps cyclists plan their rides by analyzing weather conditions and providing a comprehensive bike riding score. The app evaluates temperature, wind speed, humidity, weather conditions, precipitation, visibility, and UV index to determine the best times for cycling.
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/screenshot1.jpg" width="200" alt="Home Screen" />
+  <img src="screenshots/screenshot2.jpg" width="200" alt="Daily Forecast" />
+  <img src="screenshots/screenshot3.jpg" width="200" alt="Hourly Details" />
+  <img src="screenshots/screenshot4.jpg" width="200" alt="Settings Screen" />
+</p>
+
+## 🎥 Demo Video
+
+<p align="center">
+  <a href="screenshots/app_recording.mp4">
+    <img src="screenshots/screenshot1.jpg" width="400" alt="Watch Demo Video" />
+  </a>
+</p>
+
+> **📹 Click the image above or [here](screenshots/app_recording.mp4) to watch the demo video**
+
 ## ✨ Features
 
 ### 🌦️ Weather Data
@@ -160,38 +179,30 @@ app/
 - Android Studio Hedgehog or later
 - Android SDK 33 (Android 13) or higher
 - JDK 11 or higher
-- An API key from OpenWeatherMap or Open-Meteo
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/Bike-Weather-Forecast-App.git
+   git clone https://github.com/indianathe3rdKing/Bike-Weather-Forecast-App.git
    cd Bike-Weather-Forecast-App
    ```
 
-2. **Add your API key**
-   
-   Create a `local.properties` file in the root directory and add your API key:
-   ```properties
-   API_KEY=your_api_key_here
-   ```
-
-3. **Build the project**
+2. **Build the project**
    ```bash
    ./gradlew build
    ```
 
-4. **Run the app**
+3. **Run the app**
    - Open the project in Android Studio
    - Click Run or press Shift+F10
    - Select an emulator or connected device
 
 ### Configuration
 
-The app uses two weather API services:
-- **OpenWeatherMap** - For geocoding and city search
-- **Open-Meteo** - For weather forecast data
+The app uses:
+- **Open-Meteo API** - For all weather forecast data and city geocoding (free, no API key required)
+- **OpenWeather CDN** - For weather icon images only (public CDN, no API key required)
 
 You can configure API endpoints in `data/remote/Config.kt`.
 
@@ -307,8 +318,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **OpenWeatherMap API** - For geocoding services
-- **Open-Meteo API** - For weather forecast data
+- **Open-Meteo API** - For free weather forecast data and geocoding services
+- **OpenWeather CDN** - For weather icon images
 - **Heroicons** - For beautiful weather icons
 - **Lottie** - For smooth animations
 - **Material Design** - For design guidelines
