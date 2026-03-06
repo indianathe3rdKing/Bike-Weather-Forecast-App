@@ -1,7 +1,8 @@
+
+    // Weather icon based on weather ID (same logic as CalculateBikeRidingScoreUseCase)
 package com.example.bikeweatherforecastapp.presentation.utils
 
 
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import com.example.bikeweatherforecastapp.data.remote.Config
 import com.example.bikeweatherforecastapp.domain.model.Weather
@@ -15,7 +16,8 @@ import java.util.Date
 import java.util.Locale
 
 object Utils {
-    fun getWeatherIconUrl(iconCode: String): String{
+    // Get OpenWeather icon URL from icon code (e.g., "01d", "10n")
+    fun getWeatherIconUrl(iconCode: String): String {
         return "${Config.WEATHER_ICON_BASE_URL}$iconCode@2x.png"
     }
 
@@ -45,7 +47,7 @@ object Utils {
         return (celsius * 9 / 5) + 32
     }
 
-    // Weather icon based on weather ID (same logic as CalculateBikeRidingScoreUseCase)
+    // Weather icon based on weather ID for hourly cards (time-aware)
     fun getWeatherIcon(weather: Weather?, time: String): String {
         val hour= time.substring(0,2).toInt()
         val day = hour in 6..18
@@ -57,7 +59,6 @@ object Utils {
             in 600..622 -> "❄️"  // Snow
             in 700..781 -> "🌫️"  // Atmosphere (mist, fog, etc.)
             800 ->if (day)"🌞" else "🌚"          // Clear
-
             in 801..804 ->if(day) "☁️" else "☁️🌙"  // Clouds
             else -> "🌤️"        // Default
         }
@@ -67,3 +68,4 @@ object Utils {
 fun String.capitalize(): String{
     return this.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 }
+

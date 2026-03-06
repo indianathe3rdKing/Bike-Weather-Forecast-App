@@ -1,27 +1,7 @@
-import java.io.FileInputStream
-import java.io.InputStream
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
-
-//Load API key from forecast.properties
-val forecastProps = Properties()
-val forecastFile = File(rootProject.rootDir,"local.properties")
-if (forecastFile.exists()&&forecastFile.isFile){
-    forecastFile.inputStream().use { input: InputStream ->
-        forecastProps.load(input)
-    }
-}
-
-val apiKey: String =(
-        forecastProps.getProperty("API_KEY")
-            ?: project.findProject("API_KEY") as String?
-        ).orEmpty()
-    .trim()
-    .removeSurrounding("\"")
 
 android {
 
@@ -41,8 +21,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String","API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
