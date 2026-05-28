@@ -385,7 +385,6 @@ class WeatherViewModel(
 
         val client: SettingsClient = LocationServices.getSettingsClient(context)
         val task: Task<LocationSettingsResponse?> = client.checkLocationSettings(builder.build())
-        val currentTime = System.currentTimeMillis()
         task.addOnFailureListener {
             Toast.makeText(
                 context,
