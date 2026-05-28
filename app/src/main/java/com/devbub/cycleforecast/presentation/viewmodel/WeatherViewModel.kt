@@ -1,12 +1,16 @@
 package com.devbub.cycleforecast.presentation.viewmodel
 
 import android.Manifest
+import android.app.Activity
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -29,7 +33,13 @@ import com.devbub.cycleforecast.domain.model.Temperature
 import com.devbub.cycleforecast.domain.model.WeatherItem
 import com.devbub.cycleforecast.domain.model.WeatherState
 import com.devbub.cycleforecast.domain.usecase.SearchCityUseCase
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.Priority
+import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -37,6 +47,7 @@ import retrofit2.HttpException
 import java.time.Instant
 import java.time.ZoneId
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 class WeatherViewModel(
     application: Application,
@@ -101,7 +112,7 @@ class WeatherViewModel(
         mutableStateOf<List<Pair<Forecast, BikeRidingScore>>>(emptyList())
     val dailyScores: State<List<Pair<Forecast, BikeRidingScore>>> = _dailyScores
     private val _hourlyScores =
-    mutableStateOf<List<Pair<Forecast, BikeRidingScore>>>(emptyList())
+        mutableStateOf<List<Pair<Forecast, BikeRidingScore>>>(emptyList())
     val hourlyScores: State<List<Pair<Forecast, BikeRidingScore>>> = _hourlyScores
     fun updateSelectedDay(selectedDay: Boolean) {
         viewModelScope.launch {
@@ -143,7 +154,10 @@ class WeatherViewModel(
     /**
      * Get hourly forecasts for a specific day from the raw API weather items
      */
-    private fun getHourlyForecastsForDay(weatherItems: List<WeatherItem>, targetDate: Long): List<Forecast> {
+    private fun getHourlyForecastsForDay(
+        weatherItems: List<WeatherItem>,
+        targetDate: Long
+    ): List<Forecast> {
         return weatherItems
             .filter { item ->
                 isSameDay(item.date, targetDate)
@@ -178,7 +192,7 @@ class WeatherViewModel(
         }
     }
 
-    fun updateNotificationToggle(toggle: Boolean){
+    fun updateNotificationToggle(toggle: Boolean) {
         viewModelScope.launch {
             dataStoreManager.setNotificationToggle(toggle)
         }
@@ -218,7 +232,10 @@ class WeatherViewModel(
             Log.d(TAG, "searchCity result: $cityLocation")
 
             cityLocation?.let {
-                Log.i(TAG, "Found: ${it.name}, ${it.country} at ${it.coordinates.lat}, ${it.coordinates.lon}")
+                Log.i(
+                    TAG,
+                    "Found: ${it.name}, ${it.country} at ${it.coordinates.lat}, ${it.coordinates.lon}"
+                )
                 fetchWeatherData(
                     latitude = it.coordinates.lat,
                     longitude = it.coordinates.lon,
@@ -238,21 +255,24 @@ class WeatherViewModel(
         }
     }
 
-    fun enableNotifications(){
+    fun enableNotifications() {
         val request = PeriodicWorkRequestBuilder<NotificationWorker>(
             12, TimeUnit.HOURS
         ).build()
 
-        WorkManager.getInstance(getApplication()).enqueueUniquePeriodicWork("daily_notification",
-            ExistingPeriodicWorkPolicy.UPDATE,request)
+        WorkManager.getInstance(getApplication()).enqueueUniquePeriodicWork(
+            "daily_notification",
+            ExistingPeriodicWorkPolicy.UPDATE, request
+        )
     }
 
-    fun disableNotifications(){
+    fun disableNotifications() {
         val context = getApplication<Application>()
         WorkManager.getInstance(getApplication())
             .cancelUniqueWork("daily_notification")
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(1)
     }
 
@@ -307,7 +327,10 @@ class WeatherViewModel(
 
                     // Calculate scores for daily forecasts
                     val score = dailyForecast.map { forecast ->
-                        forecast to calculateBikeRidingScoreUseCase(forecast, showNumericValues = false)
+                        forecast to calculateBikeRidingScoreUseCase(
+                            forecast,
+                            showNumericValues = false
+                        )
                     }
 
                     _dailyScores.value = score
@@ -329,17 +352,20 @@ class WeatherViewModel(
                     )
 
                     Log.i(TAG, "Weather data fetched successfully for $cityName, $country")
-                    Log.i(TAG, "Daily forecasts: ${dailyForecast.size}, Hourly items in API response: ${response.list.size}")
+                    Log.i(
+                        TAG,
+                        "Daily forecasts: ${dailyForecast.size}, Hourly items in API response: ${response.list.size}"
+                    )
                 }
                 .onFailure { exception ->
                     Log.e(TAG, "Failed to fetch weather data", exception)
-                    val errorCode =(exception as? HttpException)?.code()
-                    val message = when(errorCode){
+                    val errorCode = (exception as? HttpException)?.code()
+                    val message = when (errorCode) {
                         400 -> "Bad Request"
                         401 -> "Unauthorized"
                         404 -> "Not Found"
-                        429->"Too many requests. Try again later."
-                        500-> "Weather service unavailable"
+                        429 -> "Too many requests. Try again later."
+                        500 -> "Weather service unavailable"
                         else -> "Unknown Error"
                     }
                     _weatherState.value = _weatherState.value.copy(
@@ -347,6 +373,35 @@ class WeatherViewModel(
                         error = "Failed to fetch weather data: ${message}"
                     )
                 }
+        }
+    }
+
+    fun checkLocation(context: Context) {
+        val locationRequest =
+            LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000).build()
+
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
+
+        val client: SettingsClient = LocationServices.getSettingsClient(context)
+        val task: Task<LocationSettingsResponse?> = client.checkLocationSettings(builder.build())
+        val currentTime = System.currentTimeMillis()
+        task.addOnFailureListener {
+            Toast.makeText(
+                context,
+                "Please enable device location for this app to work.",
+                Toast.LENGTH_LONG
+            ).show()
+
+            viewModelScope.launch {
+                delay(3000)
+                exitProcess(0)
+            }
+
+        }
+
+        task.addOnSuccessListener {
+            //Nothing to do here
         }
     }
 
@@ -372,4 +427,6 @@ class WeatherViewModel(
     companion object {
         private const val TAG = "WeatherViewModel"
     }
+
+
 }

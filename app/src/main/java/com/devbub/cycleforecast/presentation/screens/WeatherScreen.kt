@@ -1,6 +1,7 @@
 package com.devbub.cycleforecast.presentation.screens
 
 import android.Manifest
+import android.app.Application
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -15,11 +16,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import com.devbub.cycleforecast.presentation.components.MainTabNavigator
 import com.devbub.cycleforecast.presentation.viewmodel.WeatherViewModel
 import com.devbub.cycleforecast.ui.theme.DarkBlue
 import com.devbub.cycleforecast.ui.theme.LightBlue
 import com.devbub.cycleforecast.ui.theme.MediumBlue
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.tasks.Task
 import org.koin.androidx.compose.koinViewModel
 @Composable
 fun WeatherScreen(
@@ -31,6 +38,7 @@ fun WeatherScreen(
     val savedCity = viewModel.savedCity.collectAsState().value
     val useCurrentLocation = viewModel.useCurrentLocation.collectAsState().value
     var isInitialized by remember{ mutableStateOf(false)}
+    val context = viewModel.getApplication<Application>()
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -53,8 +61,10 @@ fun WeatherScreen(
         if (isInitialized) return@LaunchedEffect
 
         if (!locationPermissionGranted) {
-            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            viewModel.checkLocation(context)
+         permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else {
+            viewModel.checkLocation(context)
             // Respect the useCurrentLocation setting
             if (useCurrentLocation) {
                 viewModel.checkLocationPermission()
