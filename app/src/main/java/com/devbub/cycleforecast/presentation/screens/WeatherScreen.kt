@@ -39,6 +39,7 @@ fun WeatherScreen(
     val useCurrentLocation = viewModel.useCurrentLocation.collectAsState().value
     var isInitialized by remember{ mutableStateOf(false)}
     val context = viewModel.getApplication<Application>()
+    val locationClient = viewModel.locationState
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -68,7 +69,7 @@ fun WeatherScreen(
             // Respect the useCurrentLocation setting
             if (useCurrentLocation) {
                 viewModel.checkLocationPermission()
-            } else if (savedCity.isNotEmpty()) {
+            } else if (savedCity.isNotEmpty() && locationClient.value) {
                 viewModel.searchCity(savedCity)
             } else {
                 // No saved city, fall back to current location
@@ -111,7 +112,7 @@ fun WeatherScreen(
                 )
             }
             else ->{
-                LoadingScreen()
+                LoadingScreen(viewModel)
             }
         }
     }

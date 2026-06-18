@@ -159,11 +159,11 @@ private fun getRecommendation(score: Int): BikeRidingRecommendation {
 
 private fun getOverallRating(score: Int): String {
     return when {
-        score >= 85 -> "Perfect for cycling! 🚴🏻"
-        score >= 70 -> "Great conditions for cycling! 🚴🏻"
-        score >= 50 -> "Moderate conditions be cautious! ⚠️"
-        score >= 30 -> "Challenging conditions! 🚫"
-        else -> "Dangerous conditions! 💀"
+        score >= 85 -> "Perfect!🚴🏻"
+        score >= 70 -> "Good!🚴🏻"
+        score >= 50 -> "Moderate!⚠️"
+        score >= 30 -> "Poor!🚫"
+        else -> "Dangerous! 💀"
     }
 }
 

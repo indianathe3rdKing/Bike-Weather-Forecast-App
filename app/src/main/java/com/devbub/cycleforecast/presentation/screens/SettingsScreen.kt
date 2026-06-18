@@ -14,9 +14,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -137,7 +140,7 @@ fun SettingsScreen(viewModel: WeatherViewModel = koinViewModel()) {
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(horizontal = 26.dp)
-            .padding(bottom = 100.dp) // Extra padding for bottom navigation bar
+            .padding(bottom = 80.dp + WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 16.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
 

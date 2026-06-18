@@ -2,12 +2,15 @@ package com.devbub.cycleforecast.presentation.viewmodel
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -40,6 +43,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -122,6 +126,9 @@ class WeatherViewModel(
             Log.i(TAG, "updateSelectedDay: $selectedDay")
         }
     }
+
+    private val _locationState = mutableStateOf(true)
+    val locationState: State<Boolean> = _locationState
 
     fun setSelectedDayDate(date: Long) {
         viewModelScope.launch {
@@ -386,21 +393,26 @@ class WeatherViewModel(
         val client: SettingsClient = LocationServices.getSettingsClient(context)
         val task: Task<LocationSettingsResponse?> = client.checkLocationSettings(builder.build())
         task.addOnFailureListener {
-            Toast.makeText(
-                context,
-                "Please enable device location for this app to work.",
-                Toast.LENGTH_LONG
-            ).show()
+
+            _locationState.value = false
+
+
+
 
             viewModelScope.launch {
                 delay(3000)
                 exitProcess(0)
+
+
+
+
+
             }
 
         }
 
         task.addOnSuccessListener {
-            //Nothing to do here
+            _locationState.value = true
         }
     }
 

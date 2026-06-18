@@ -94,7 +94,8 @@ fun HeaderSection(
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
                             text = "🥇Best day :",
@@ -112,7 +113,8 @@ fun HeaderSection(
                         Text(
                             text = bestScore.overallRating,
                             color = TextTertiary,
-                            fontSize = 14.sp
+                            fontSize = 12.sp
+                            ,maxLines = 1
                         )
                     }
                 }
