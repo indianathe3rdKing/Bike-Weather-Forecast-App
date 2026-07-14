@@ -4,6 +4,13 @@
 [![Android](https://img.shields.io/badge/Android-13+-green.svg)](https://developer.android.com)
 [![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Latest-blue.svg)](https://developer.android.com/jetpack/compose)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Google Play](https://img.shields.io/badge/Google%20Play-Download-34A853?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=com.devbub.cycleforecast)
+
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.devbub.cycleforecast">
+    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80"/>
+  </a>
+</p>
 
 A modern Android weather application designed specifically for cyclists, providing weather forecasts with bike riding score recommendations based on multiple weather factors.
 
