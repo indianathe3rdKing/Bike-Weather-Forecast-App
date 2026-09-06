@@ -85,7 +85,7 @@ fun BikeRidingCard(
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor
         ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(30.dp),
 
         ) {
         Column(
@@ -188,3 +188,4 @@ fun BikeRidingCard(
         }
     }
 }
+

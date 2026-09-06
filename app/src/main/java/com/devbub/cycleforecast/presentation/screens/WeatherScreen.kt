@@ -45,10 +45,8 @@ fun WeatherScreen(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            // Respect the useCurrentLocation setting
-            if (useCurrentLocation) {
-                viewModel.checkLocationPermission()
-            } else if (savedCity.isNotEmpty()) {
+
+            if (savedCity.isNotEmpty()) {
                 viewModel.searchCity(savedCity)
             } else {
                 // No saved city, fall back to current location
@@ -62,7 +60,6 @@ fun WeatherScreen(
         if (isInitialized) return@LaunchedEffect
 
         if (!locationPermissionGranted) {
-            viewModel.checkLocation(context)
          permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         } else {
             viewModel.checkLocation(context)

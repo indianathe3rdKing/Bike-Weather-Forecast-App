@@ -291,7 +291,7 @@ class WeatherViewModel(
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            fusedLocationClient.getCurrentLocation(
+             fusedLocationClient.getCurrentLocation(
                 Priority.PRIORITY_HIGH_ACCURACY, null
             )
 
@@ -396,15 +396,9 @@ class WeatherViewModel(
 
             _locationState.value = false
 
-
-
-
             viewModelScope.launch {
                 delay(3000)
                 exitProcess(0)
-
-
-
 
 
             }
